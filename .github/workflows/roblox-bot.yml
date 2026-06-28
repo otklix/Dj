@@ -36,10 +36,10 @@ jobs:
     
     steps:
       - name: 📥 Клонирование
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Обновлено до v4
       
       - name: 🐍 Установка Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5  # Обновлено до v5
         with:
           python-version: '3.10'
       
@@ -62,8 +62,8 @@ jobs:
           GAME_LINK: ${{ github.event.inputs.game_link }}
           ACTION: ${{ github.event.inputs.action }}
           DURATION: ${{ github.event.inputs.duration }}
-          BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}  # ← СЕКРЕТНЫЙ ПАРОЛЬ
-          USER_PASSWORD: ${{ github.event.inputs.user_password }}  # ← Введенный пароль
+          BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}
+          USER_PASSWORD: ${{ github.event.inputs.user_password }}
         run: |
           Xvfb :99 -screen 0 1280x720x24 &
           export DISPLAY=:99
@@ -79,14 +79,14 @@ jobs:
       
       - name: 📤 Загрузка скриншота
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ← Исправлено: v3 → v4
         with:
           name: game-screenshot
           path: /tmp/game_screenshot.png
       
       - name: 📤 Загрузка логов
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ← Исправлено: v3 → v4
         with:
           name: bot-logs
           path: /tmp/bot.log
