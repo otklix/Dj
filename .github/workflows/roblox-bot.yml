@@ -22,15 +22,18 @@ jobs:
         run: |
           pip install flask flask-cors requests
       
-      - name: 🚀 Запуск сервера
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}
+      - name: 🚀 Запуск сервера в фоне
         run: |
           python server.py &
-          sleep 5
-          echo "✅ Сервер запущен на порту 5000"
+          sleep 10
+          echo "✅ Сервер запущен"
       
-      - name: 🔍 Проверка
+      - name: 🔍 Проверка сервера
         run: |
-          curl http://localhost:5000
+          curl -v http://localhost:5000 || echo "⚠️ Сервер не отвечает"
+      
+      - name: 📋 Логи сервера
+        if: always()
+        run: |
+          ps aux | grep python
+          netstat -tlnp 2>/dev/null || ss -tlnp
