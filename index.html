@@ -1,45 +1,54 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>🤖 Roblox Bot Control</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a1a;
             min-height: 100vh;
+            background: #0b0b1a;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: radial-gradient(ellipse at 20% 50%, rgba(0,245,255,0.05) 0%, transparent 60%),
-                              radial-gradient(ellipse at 80% 50%, rgba(255,0,230,0.05) 0%, transparent 60%);
+            padding: 20px;
         }
 
-        .container {
-            background: rgba(255,255,255,0.02);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 24px;
-            padding: 35px;
-            max-width: 550px;
-            width: 90%;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        .glass-card {
+            max-width: 520px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            padding: 32px 28px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            transition: 0.3s;
         }
 
         h1 {
             text-align: center;
             font-size: 2rem;
-            background: linear-gradient(135deg, #00f5ff, #ff00e6);
+            font-weight: 700;
+            background: linear-gradient(135deg, #00f0ff, #b400ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 25px;
+            margin-bottom: 6px;
+        }
+
+        .sub {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.25);
+            margin-bottom: 28px;
         }
 
         .input-group {
@@ -48,22 +57,23 @@
 
         label {
             display: block;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-            font-weight: 500;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 5px;
+            letter-spacing: 0.3px;
         }
 
         input, textarea, select {
             width: 100%;
             padding: 12px 14px;
-            background: rgba(255,255,255,0.03);
-            border: 2px solid rgba(255,255,255,0.06);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
             color: #fff;
             font-size: 0.95rem;
-            font-family: inherit;
-            transition: all 0.3s;
+            transition: 0.25s;
+            outline: none;
         }
 
         textarea {
@@ -72,80 +82,91 @@
         }
 
         input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #00f5ff;
-            box-shadow: 0 0 30px rgba(0,245,255,0.05);
+            border-color: #00c8ff;
+            box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.1);
         }
 
         select option {
-            background: #1a1a2e;
+            background: #15152a;
             color: #fff;
         }
 
         .password-input {
-            font-size: 1.1rem;
             letter-spacing: 2px;
+            font-size: 1rem;
         }
 
-        .btn {
+        .hint {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.15);
+            margin-top: 4px;
+        }
+
+        .btn-primary {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #00f5ff, #0088cc);
+            padding: 15px;
+            background: linear-gradient(135deg, #00c8ff, #7b2ffc);
             border: none;
-            border-radius: 12px;
-            color: #fff;
+            border-radius: 16px;
             font-size: 1rem;
             font-weight: 700;
+            color: #fff;
             cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 1px;
-            margin-top: 8px;
+            transition: 0.25s;
+            letter-spacing: 0.5px;
+            margin-top: 6px;
         }
 
-        .btn:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 40px rgba(0,245,255,0.2);
-        }
-
-        .btn:active {
-            transform: translateY(0px);
+            box-shadow: 0 8px 30px rgba(0, 200, 255, 0.25);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ff0055, #cc0033);
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 60, 80, 0.12);
+            border: 1px solid rgba(255, 60, 80, 0.2);
+            border-radius: 14px;
+            color: #ff6b7a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
         }
 
         .btn-danger:hover {
-            box-shadow: 0 8px 40px rgba(255,0,85,0.2);
+            background: rgba(255, 60, 80, 0.2);
         }
 
         .status {
             text-align: center;
-            margin-top: 15px;
-            color: rgba(255,255,255,0.3);
             font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.25);
+            margin: 16px 0 10px;
         }
 
-        .status .online { color: #00ff88; }
-        .status .error { color: #ff4444; }
-        .status .loading { color: #ffaa00; }
-
-        .hint {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.2);
-            margin-top: 4px;
+        .status .online {
+            color: #3bff9e;
+        }
+        .status .error {
+            color: #ff5e7a;
+        }
+        .status .loading {
+            color: #ffb347;
         }
 
         .log {
-            margin-top: 15px;
-            max-height: 120px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 14px;
+            padding: 12px 14px;
+            max-height: 110px;
             overflow-y: auto;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 10px;
             font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .log::-webkit-scrollbar {
@@ -153,78 +174,85 @@
         }
 
         .log::-webkit-scrollbar-thumb {
-            background: rgba(0,245,255,0.2);
-            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
         }
 
         .log-entry {
-            padding: 2px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
 
         .log-entry .time {
-            color: rgba(255,255,255,0.15);
+            color: rgba(255, 255, 255, 0.15);
             margin-right: 8px;
         }
 
-        .log-entry.success { color: #00ff88; }
-        .log-entry.error { color: #ff4444; }
-        .log-entry.info { color: rgba(255,255,255,0.5); }
-        .log-entry.system { color: #00f5ff; }
+        .log-entry.success {
+            color: #3bff9e;
+        }
+        .log-entry.error {
+            color: #ff5e7a;
+        }
+        .log-entry.info {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .log-entry.system {
+            color: #6fcbff;
+        }
 
         .footer {
             text-align: center;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.06);
             margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.03);
-            color: rgba(255,255,255,0.1);
-            font-size: 0.7rem;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .github-link {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-            color: rgba(255,255,255,0.15);
-            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.08);
             text-decoration: none;
+            transition: 0.2s;
         }
 
         .github-link:hover {
-            color: rgba(255,255,255,0.3);
+            color: rgba(255, 255, 255, 0.2);
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 20px;
+            .glass-card {
+                padding: 22px 16px;
             }
             h1 {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>🤖 Roblox Bot</h1>
+    <div class="glass-card">
 
-        <!-- 🔐 ПАРОЛЬ -->
+        <h1>🤖 Roblox Bot</h1>
+        <div class="sub">Управление ботом через облако</div>
+
+        <!-- ПАРОЛЬ -->
         <div class="input-group">
             <label>🔐 Пароль</label>
-            <input type="password" id="botPassword" class="password-input" placeholder="Введите секретный пароль...">
-            <div class="hint">💡 Пароль из GitHub Secrets</div>
+            <input type="password" id="botPassword" class="password-input" placeholder="Введите пароль из GitHub Secrets" />
+            <div class="hint">Пароль, который вы создали в настройках репозитория</div>
         </div>
 
-        <!-- 🔗 ССЫЛКА -->
+        <!-- ССЫЛКА -->
         <div class="input-group">
             <label>🔗 Ссылка на игру</label>
-            <textarea id="gameLink" placeholder="Вставьте ссылку на приватный сервер Roblox...">https://www.roblox.com/games/123456789/Private-Server</textarea>
+            <textarea id="gameLink" placeholder="Вставьте ссылку на приватный сервер...">https://www.roblox.com/games/123456789/Private-Server</textarea>
         </div>
 
-        <!-- 🎯 ДЕЙСТВИЕ -->
+        <!-- ДЕЙСТВИЕ -->
         <div class="input-group">
-            <label>🎯 Действие бота</label>
+            <label>🎯 Действие</label>
             <select id="botAction">
                 <option value="stand_and_wait">🧍 Стоять и ждать</option>
                 <option value="walk_to_player">🚶 Подойти к игроку</option>
@@ -233,64 +261,62 @@
             </select>
         </div>
 
-        <!-- 👤 НИК -->
+        <!-- НИК -->
         <div class="input-group">
             <label>👤 Ваш ник в Roblox</label>
-            <input type="text" id="playerNick" placeholder="Введите ваш ник..." value="ВашНик">
+            <input type="text" id="playerNick" placeholder="Например: MyCoolName" value="ВашНик" />
         </div>
 
-        <!-- ⏱ ВРЕМЯ -->
+        <!-- ВРЕМЯ -->
         <div class="input-group">
             <label>⏱ Время ожидания (сек)</label>
-            <input type="number" id="duration" value="60" min="1" max="3600">
+            <input type="number" id="duration" value="60" min="1" max="3600" />
         </div>
 
         <!-- КНОПКИ -->
-        <button class="btn" onclick="executeBot()">🚀 ЗАПУСТИТЬ БОТА</button>
-        <button class="btn btn-danger" onclick="stopBot()" style="margin-top: 8px;">⛔ ОСТАНОВИТЬ</button>
+        <button class="btn-primary" onclick="executeBot()">🚀 ЗАПУСТИТЬ БОТА</button>
+        <button class="btn-danger" onclick="stopBot()">⛔ ОСТАНОВИТЬ</button>
 
         <!-- СТАТУС -->
         <div class="status" id="status">
-            Статус: <span class="online">● Ожидание</span>
+            Статус: <span class="online">● Готов к работе</span>
         </div>
 
         <!-- ЛОГ -->
         <div class="log" id="logContainer">
             <div class="log-entry system">
                 <span class="time">[00:00:00]</span>
-                🔐 Введите пароль и нажмите "ЗАПУСТИТЬ БОТА"
+                🔐 Введите пароль и запустите бота
             </div>
         </div>
 
         <div class="footer">
-            🤖 Roblox Bot Control Panel v3.0
+            <a href="#" class="github-link">⚡ Работает через GitHub Actions</a>
         </div>
-        <a href="https://github.com/ВАШ_НИК/Roblox-Cloud-Bot" class="github-link" target="_blank">
-            📦 Исходный код на GitHub
-        </a>
+
     </div>
 
     <script>
-        // ===== КОНФИГ (ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ) =====
-        const GITHUB_USER = 'ВАШ_НИК_НА_GITHUB';  // ← ИЗМЕНИТЕ
-        const REPO_NAME = 'Roblox-Cloud-Bot';      // ← ИЗМЕНИТЕ
+        // ===== КОНФИГ =====
+        const GITHUB_USER = 'ВАШ_НИК_НА_GITHUB'; // ← ИЗМЕНИТЕ
+        const REPO_NAME = 'Roblox-Cloud-Bot';     // ← ИЗМЕНИТЕ
 
         // ===== ЛОГ =====
         function addLog(type, message) {
-            const container = document.getElementById('logContainer');
+            const log = document.getElementById('logContainer');
             const time = new Date().toLocaleTimeString();
             const entry = document.createElement('div');
             entry.className = `log-entry ${type}`;
             entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
-            container.prepend(entry);
-            while (container.children.length > 50) container.removeChild(container.lastChild);
+            log.prepend(entry);
+            while (log.children.length > 50) log.removeChild(log.lastChild);
         }
 
         function setStatus(text, type) {
             document.getElementById('status').innerHTML = `Статус: <span class="${type}">● ${text}</span>`;
         }
 
-        // ===== ЗАПУСТИТЬ БОТА =====
+        // ===== ЗАПУСК =====
         async function executeBot() {
             const password = document.getElementById('botPassword').value.trim();
             const link = document.getElementById('gameLink').value.trim();
@@ -298,32 +324,19 @@
             const action = document.getElementById('botAction').value;
             const duration = document.getElementById('duration').value;
 
-            // Проверки
-            if (!password) {
-                addLog('error', '❌ Введите пароль!');
-                return;
-            }
-            if (!link || !link.includes('roblox.com')) {
-                addLog('error', '❌ Введите ссылку на Roblox!');
-                return;
-            }
-            if (!nick) {
-                addLog('error', '❌ Введите ваш ник!');
-                return;
-            }
+            if (!password) { addLog('error', '❌ Введите пароль!'); return; }
+            if (!link.includes('roblox.com')) { addLog('error', '❌ Введите ссылку Roblox!'); return; }
+            if (!nick) { addLog('error', '❌ Введите ваш ник!'); return; }
 
             addLog('info', `🎯 Отправляю команду "${action}" для ${nick}`);
             setStatus('Отправка...', 'loading');
 
             try {
-                // Отправляем через GitHub API (без токена!)
                 const response = await fetch(
                     `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/actions/workflows/roblox-bot.yml/dispatches`,
                     {
                         method: 'POST',
-                        headers: {
-                            'Accept': 'application/vnd.github.v3+json'
-                        },
+                        headers: { 'Accept': 'application/vnd.github.v3+json' },
                         body: JSON.stringify({
                             ref: 'main',
                             inputs: {
@@ -340,8 +353,7 @@
                     addLog('success', `✅ Бот запущен! Действие: ${action}`);
                     setStatus('Бот запущен ✅', 'online');
                 } else if (response.status === 401 || response.status === 403) {
-                    addLog('error', '❌ Ошибка авторизации!');
-                    addLog('info', '💡 Используйте GitHub Actions с GITHUB_TOKEN');
+                    addLog('error', '❌ Ошибка авторизации! Репозиторий должен быть публичным');
                     setStatus('Ошибка авторизации ❌', 'error');
                 } else {
                     addLog('error', `❌ Ошибка: ${response.status}`);
@@ -353,12 +365,11 @@
             }
         }
 
-        // ===== ОСТАНОВИТЬ БОТА =====
-        async function stopBot() {
-            addLog('info', '⛔ Останавливаю бота...');
-            setStatus('Остановка...', 'loading');
-            addLog('info', '📌 Остановка доступна в интерфейсе GitHub Actions');
+        // ===== ОСТАНОВКА =====
+        function stopBot() {
+            addLog('info', '⛔ Остановка...');
             setStatus('Остановка ⏹', 'online');
+            addLog('info', '📌 Остановите вручную на вкладке Actions GitHub');
         }
 
         // ===== ENTER =====
@@ -366,8 +377,7 @@
             document.getElementById('botPassword').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') executeBot();
             });
-            addLog('system', '🔐 Система готова.');
-            addLog('info', '📌 Введите пароль и нажмите "ЗАПУСТИТЬ БОТА"');
+            addLog('system', '🔐 Система готова. Введите пароль и запустите бота.');
         });
     </script>
 
