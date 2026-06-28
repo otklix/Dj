@@ -3,19 +3,70 @@ import os
 import time
 import subprocess
 import sys
+import requests
 import re
+import json
 from datetime import datetime
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 def log(message):
     timestamp = datetime.now().strftime('%H:%M:%S')
     print(f"[{timestamp}] 🤖 {message}")
     sys.stdout.flush()
+
+def get_csrf_token(session):
+    """Получает CSRF токен через /v2/logout"""
+    try:
+        response = session.post('https://auth.roblox.com/v2/logout')
+        csrf = response.headers.get('x-csrf-token')
+        if csrf:
+            return csrf
+        # Если не получилось, пробуем через /v2/login
+        response = session.post('https://auth.roblox.com/v2/login')
+        return response.headers.get('x-csrf-token')
+    except:
+        return None
+
+def login_to_roblox(login, password):
+    """Пытается войти в Roblox и вернуть .ROBLOSECURITY"""
+    session = requests.Session()
+    session.headers.update({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Content-Type': 'application/json',
+        'Origin': 'https://www.roblox.com',
+        'Referer': 'https://www.roblox.com/'
+    })
+
+    # Получаем CSRF токен
+    csrf = get_csrf_token(session)
+    if csrf:
+        session.headers.update({'X-CSRF-TOKEN': csrf})
+
+    # Пробуем войти
+    login_data = {
+        'ctype': 'Username',
+        'cvalue': login,
+        'password': password
+    }
+
+    try:
+        response = session.post('https://auth.roblox.com/v2/login', json=login_data)
+        data = response.json()
+        
+        if response.status_code == 200 and data.get('user'):
+            # Успешный вход — забираем куку
+            for cookie in session.cookies:
+                if cookie.name == '.ROBLOSECURITY':
+                    log("✅ ВХОД ВЫПОЛНЕН! ЗАБИРАЮ КУКУ...")
+                    return cookie.value
+        else:
+            error = data.get('errors', [{}])[0].get('message', 'Неизвестная ошибка')
+            log(f"❌ ОШИБКА ВХОДА: {error}")
+            return None
+    except Exception as e:
+        log(f"❌ ОШИБКА: {e}")
+        return None
 
 def main():
     log("🚀 ЗАПУСК БОТА...")
@@ -38,66 +89,38 @@ def main():
 
     if not login or not password:
         log("❌ НЕ ВВЕДЕНЫ ЛОГИН ИЛИ ПАРОЛЬ!")
+        log("💡 ЗАПОЛНИТЕ ПОЛЯ ПРИ ЗАПУСКЕ WORKFLOW")
         sys.exit(1)
 
-    # ===== ВХОД ЧЕРЕЗ БРАУЗЕР =====
-    log("🌐 ЗАПУСКАЮ БРАУЗЕР ДЛЯ ВХОДА...")
+    # ===== ПОЛУЧАЕМ КУКУ БЕЗ БРАУЗЕРА =====
+    log("🔑 ПЫТАЮСЬ ВОЙТИ В АККАУНТ...")
+    roblosecurity = login_to_roblox(login, password)
 
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--window-size=1280,720")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--remote-debugging-port=9222")
+    if not roblosecurity:
+        log("❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ КУКУ!")
+        log("💡 ПРОВЕРЬТЕ ЛОГИН И ПАРОЛЬ")
+        sys.exit(1)
 
+    log("🍪 КУКА ПОЛУЧЕНА УСПЕШНО!")
+
+    # ===== ПРОВЕРЯЕМ КУКУ =====
     try:
-        driver = webdriver.Chrome(options=options)
-        driver.get("https://www.roblox.com/login")
-
-        log("⏳ ВВОЖУ ЛОГИН И ПАРОЛЬ...")
+        session = requests.Session()
+        session.cookies.set('.ROBLOSECURITY', roblosecurity)
+        session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        })
         
-        time.sleep(3)
-        
-        login_input = driver.find_element(By.ID, "login-username")
-        login_input.clear()
-        login_input.send_keys(login)
-        
-        password_input = driver.find_element(By.ID, "login-password")
-        password_input.clear()
-        password_input.send_keys(password)
-        
-        login_button = driver.find_element(By.ID, "login-button")
-        login_button.click()
-        
-        log("⏳ ОЖИДАЮ ВХОД...")
-        time.sleep(5)
-        
-        if "login" in driver.current_url:
-            log("❌ НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ!")
-            driver.quit()
+        response = session.get('https://www.roblox.com/mobileapi/userinfo')
+        if response.status_code == 200:
+            data = response.json()
+            log(f"✅ ВХОД ПОДТВЕРЖДЁН! ИМЯ: {data.get('UserName', 'Неизвестно')}")
+            log(f"👤 ID: {data.get('UserID', 'Неизвестно')}")
+        else:
+            log(f"❌ КУКА НЕ РАБОТАЕТ! СТАТУС: {response.status_code}")
             sys.exit(1)
-        
-        log("✅ ВХОД ВЫПОЛНЕН!")
-
-        # ===== ЗАБИРАЕМ COOKIE =====
-        cookies = driver.get_cookies()
-        roblosecurity = None
-        for cookie in cookies:
-            if cookie['name'] == '.ROBLOSECURITY':
-                roblosecurity = cookie['value']
-                break
-        
-        driver.quit()
-
-        if not roblosecurity:
-            log("❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ COOKIE!")
-            sys.exit(1)
-
-        log("🍪 COOKIE ПОЛУЧЕН АВТОМАТИЧЕСКИ!")
-
     except Exception as e:
-        log(f"❌ ОШИБКА ВХОДА: {e}")
+        log(f"❌ ОШИБКА ПРОВЕРКИ: {e}")
         sys.exit(1)
 
     # ===== ЗАПУСК ИГРЫ =====
@@ -107,7 +130,7 @@ def main():
     cmd = f"wine {roblox_path} --url {game_link}"
     subprocess.Popen(cmd, shell=True)
 
-    log("⏳ ОЖИДАНИЕ ЗАГРУЗКИ...")
+    log("⏳ ОЖИДАНИЕ ЗАГРУЗКИ (30 сек)...")
     time.sleep(30)
     log("✅ ROXBLOX ЗАПУЩЕН!")
 
