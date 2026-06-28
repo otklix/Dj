@@ -1,38 +1,13 @@
-name: 🤖 Roblox Cloud Bot
+name: 🌐 Веб-сервер
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
-    inputs:
-      game_link:
-        description: '🔗 Ссылка на приватный сервер Roblox'
-        required: true
-        type: string
-        default: 'https://www.roblox.com/games/123456789/Private-Server'
-      action:
-        description: '🎯 Действие бота'
-        required: true
-        type: choice
-        options:
-          - stand_and_wait
-          - walk_to_player
-          - take_item
-          - leave_game
-      duration:
-        description: '⏱ Время ожидания (сек)'
-        required: false
-        type: number
-        default: 60
-      user_password:
-        description: '🔐 ВАШ ПАРОЛЬ (введите секретный пароль)'
-        required: true
-        type: string
-        default: ''
 
 jobs:
-  roblox-bot:
-    name: 🚀 Запуск Roblox бота
+  deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
     
     steps:
       - name: 📥 Клонирование
@@ -45,77 +20,17 @@ jobs:
       
       - name: 📦 Установка зависимостей
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            xvfb \
-            xdotool \
-            imagemagick \
-            wget \
-            unzip \
-            python3-pip \
-            scrot \
-            gnupg \
-            software-properties-common
-          
-          # Установка Wine (правильный способ)
-          sudo dpkg --add-architecture i386
-          sudo mkdir -pm755 /etc/apt/keyrings
-          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -sc)/winehq-$(lsb_release -sc).sources
-          sudo apt-get update
-          sudo apt-get install -y --install-recommends winehq-stable
-          
-          pip install -r bot/requirements.txt
+          pip install flask flask-cors requests
       
-      - name: 🔍 Проверка файлов
-        run: |
-          echo "=== Структура проекта ==="
-          ls -la
-          echo "=== Папка bot ==="
-          ls -la bot/ || echo "Папка bot не найдена!"
-          echo "=== config.json ==="
-          cat bot/config.json || echo "config.json не найден!"
-      
-      - name: 🎮 Установка Roblox
-        run: |
-          wget https://setup.rbxcdn.com/RobloxPlayerLauncher.exe -O /tmp/RobloxPlayerLauncher.exe
-          WINEPREFIX=/home/runner/.wine wine /tmp/RobloxPlayerLauncher.exe /silent
-          sleep 30
-      
-      - name: 🤖 Запуск бота
+      - name: 🚀 Запуск сервера
         env:
-          GAME_LINK: ${{ github.event.inputs.game_link }}
-          ACTION: ${{ github.event.inputs.action }}
-          DURATION: ${{ github.event.inputs.duration }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}
-          USER_PASSWORD: ${{ github.event.inputs.user_password }}
         run: |
-          export DISPLAY=:99
-          Xvfb :99 -screen 0 1280x720x24 &
+          python server.py &
           sleep 5
-          
-          echo "=== Запуск бота ==="
-          echo "GAME_LINK: $GAME_LINK"
-          echo "ACTION: $ACTION"
-          echo "DURATION: $DURATION"
-          
-          cd bot
-          python3 -u bot.py 2>&1 | tee /tmp/bot.log
+          echo "✅ Сервер запущен на порту 5000"
       
-      - name: 📸 Скриншот
-        if: always()
+      - name: 🔍 Проверка
         run: |
-          export DISPLAY=:99
-          sleep 3
-          mkdir -p /tmp/artifacts
-          scrot /tmp/artifacts/game_screenshot.png 2>/dev/null || echo "⚠️ Скриншот не создан"
-      
-      - name: 📤 Загрузка артефактов
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: bot-artifacts
-          path: |
-            /tmp/artifacts/
-            /tmp/bot.log
-          if-no-files-found: warn
+          curl http://localhost:5000
