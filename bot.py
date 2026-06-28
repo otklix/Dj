@@ -1,7 +1,6 @@
-l#!/usr/bin/env python3
+#!/usr/bin/env python3
 import os
 import time
-import subprocess
 import sys
 import requests
 from datetime import datetime
@@ -49,6 +48,7 @@ def main():
         if response.status_code == 200:
             data = response.json()
             log(f"✅ ВХОД ВЫПОЛНЕН! ИМЯ: {data.get('UserName', 'Неизвестно')}")
+            log(f"👤 ID: {data.get('UserID', 'Неизвестно')}")
         else:
             log(f"❌ КУКА НЕ РАБОТАЕТ! СТАТУС: {response.status_code}")
             sys.exit(1)
@@ -56,27 +56,18 @@ def main():
         log(f"❌ ОШИБКА ПРОВЕРКИ: {e}")
         sys.exit(1)
 
-    # ===== ЗАПУСК ИГРЫ =====
-    log("🚀 ЗАПУСКАЮ ROXBLOX...")
-
-    roblox_path = "/home/runner/.wine/drive_c/users/runner/Local Settings/Application Data/Roblox/Versions/RobloxPlayerLauncher.exe"
+    # ===== ВМЕСТО ЗАПУСКА ROXBLOX — ПРОСТО ИМИТИРУЕМ ДЕЙСТВИЕ =====
+    log("⚠️ ROXBLOX НЕ ЗАПУСКАЕТСЯ В GITHUB ACTIONS (НЕТ ГРАФИКИ)")
+    log(f"🎯 ВЫПОЛНЯЮ ДЕЙСТВИЕ (ИМИТАЦИЯ): {action}")
+    log(f"⏳ ОЖИДАНИЕ {duration} СЕКУНД...")
     
-    # Проверяем, существует ли файл
-    import os.path
-    if not os.path.exists(roblox_path):
-        log(f"❌ ROXBLOX НЕ НАЙДЕН!")
-        sys.exit(1)
-
-    cmd = f"wine {roblox_path} --url {game_link}"
-    subprocess.Popen(cmd, shell=True)
-
-    log("⏳ ОЖИДАНИЕ ЗАГРУЗКИ (30 сек)...")
-    time.sleep(30)
-    log("✅ ROXBLOX ЗАПУЩЕН!")
-
-    log(f"🎯 ВЫПОЛНЯЮ ДЕЙСТВИЕ: {action}")
-    time.sleep(duration)
-    log("✅ БОТ ЗАВЕРШИЛ РАБОТУ!")
+    # Имитация выполнения действия
+    for i in range(duration):
+        if i % 10 == 0:
+            log(f"⏳ ПРОШЛО {i} СЕКУНД...")
+        time.sleep(1)
+    
+    log("✅ БОТ ЗАВЕРШИЛ РАБОТУ (ИМИТАЦИЯ)!")
 
 if __name__ == "__main__":
     main()
