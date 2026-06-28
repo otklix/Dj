@@ -7,11 +7,10 @@ import re
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import requests
 
 def log(message):
     timestamp = datetime.now().strftime('%H:%M:%S')
@@ -45,38 +44,35 @@ def main():
     log("🌐 ЗАПУСКАЮ БРАУЗЕР ДЛЯ ВХОДА...")
 
     options = Options()
-    options.add_argument("--headless")  # Без графического интерфейса
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1280,720")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--remote-debugging-port=9222")
 
     try:
-        driver = webdriver.Firefox(options=options)
+        driver = webdriver.Chrome(options=options)
         driver.get("https://www.roblox.com/login")
 
         log("⏳ ВВОЖУ ЛОГИН И ПАРОЛЬ...")
         
-        # Ждём загрузки страницы
         time.sleep(3)
         
-        # Вводим логин
         login_input = driver.find_element(By.ID, "login-username")
         login_input.clear()
         login_input.send_keys(login)
         
-        # Вводим пароль
         password_input = driver.find_element(By.ID, "login-password")
         password_input.clear()
         password_input.send_keys(password)
         
-        # Нажимаем кнопку "Войти"
         login_button = driver.find_element(By.ID, "login-button")
         login_button.click()
         
         log("⏳ ОЖИДАЮ ВХОД...")
         time.sleep(5)
         
-        # Проверяем, успешно ли вошли
         if "login" in driver.current_url:
             log("❌ НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ!")
             driver.quit()
