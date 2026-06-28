@@ -1,4 +1,4 @@
-p#!/usr/bin/env python3
+l#!/usr/bin/env python3
 import os
 import time
 import subprocess
@@ -25,15 +25,16 @@ def main():
     except ValueError:
         duration = 60
 
-    log(f"📌 ССЫЛКА: {game_link[:50]}...")
+    log(f"📌 ССЫЛКА: {game_link}")
     log(f"📌 ДЕЙСТВИЕ: {action}")
     log(f"📌 ЦЕЛЬ: {target_nick}")
+    log(f"⏱ ВРЕМЯ: {duration} сек")
 
     if not roblosecurity:
         log("❌ КУКА НЕ НАЙДЕНА В СЕКРЕТАХ!")
         sys.exit(1)
 
-    log("🍪 КУКА ПОЛУЧЕНА ИЗ СЕКРЕТОВ!")
+    log("🍪 КУКА ПОЛУЧЕНА ИЗ СЕКРЕТОВ")
 
     # ===== ПРОВЕРЯЕМ КУКУ =====
     try:
@@ -44,12 +45,12 @@ def main():
         })
         
         response = session.get('https://www.roblox.com/mobileapi/userinfo')
+        
         if response.status_code == 200:
             data = response.json()
             log(f"✅ ВХОД ВЫПОЛНЕН! ИМЯ: {data.get('UserName', 'Неизвестно')}")
-            log(f"👤 ID: {data.get('UserID', 'Неизвестно')}")
         else:
-            log(f"❌ НЕВЕРНАЯ КУКА! СТАТУС: {response.status_code}")
+            log(f"❌ КУКА НЕ РАБОТАЕТ! СТАТУС: {response.status_code}")
             sys.exit(1)
     except Exception as e:
         log(f"❌ ОШИБКА ПРОВЕРКИ: {e}")
@@ -59,6 +60,13 @@ def main():
     log("🚀 ЗАПУСКАЮ ROXBLOX...")
 
     roblox_path = "/home/runner/.wine/drive_c/users/runner/Local Settings/Application Data/Roblox/Versions/RobloxPlayerLauncher.exe"
+    
+    # Проверяем, существует ли файл
+    import os.path
+    if not os.path.exists(roblox_path):
+        log(f"❌ ROXBLOX НЕ НАЙДЕН!")
+        sys.exit(1)
+
     cmd = f"wine {roblox_path} --url {game_link}"
     subprocess.Popen(cmd, shell=True)
 
