@@ -38,12 +38,19 @@ jobs:
         with:
           python-version: '3.10'
       
-      - name: Setup Wine
+      - name: Setup Wine & dependencies
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y wine64 wine32 xvfb xdotool scrot
           pip install requests pyautogui
+      
+      - name: Install Roblox
+        run: |
+          wget https://setup.rbxcdn.com/RobloxPlayerLauncher.exe -O /tmp/RobloxPlayerLauncher.exe
+          WINEPREFIX=/home/runner/.wine wine /tmp/RobloxPlayerLauncher.exe /silent
+          sleep 30
+          echo "✅ Roblox установлен!"
       
       - name: Run Bot
         env:
