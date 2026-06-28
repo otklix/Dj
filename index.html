@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>🤖 Roblox Bot Panel</title>
     <style>
-        /* ===== БАЗА ===== */
         * {
             margin: 0;
             padding: 0;
@@ -23,13 +22,12 @@
         }
 
         .container {
-            max-width: 480px;
+            max-width: 460px;
             width: 100%;
             background: #111111;
             border: 1px solid #2a2a2a;
             border-radius: 24px;
             padding: 20px 18px;
-            box-shadow: 0 0 60px rgba(255, 255, 255, 0.02);
         }
 
         .header {
@@ -76,7 +74,6 @@
             padding-bottom: 6px;
         }
 
-        /* ===== ПЛАВНАЯ ПАНЕЛЬ ===== */
         .slide-panel {
             max-height: 0;
             overflow: hidden;
@@ -86,12 +83,11 @@
         }
 
         .slide-panel.open {
-            max-height: 700px;
+            max-height: 500px;
             opacity: 1;
             margin-bottom: 10px;
         }
 
-        /* ===== ПОЛЯ ===== */
         .input-group {
             margin-bottom: 8px;
         }
@@ -128,15 +124,9 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.02);
         }
 
-        select option {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-
-        .cookie-input {
-            font-size: 0.6rem;
-            letter-spacing: 0.3px;
-            word-break: break-all;
+        .password-input {
+            letter-spacing: 2px;
+            font-size: 0.75rem;
         }
 
         .hint {
@@ -145,7 +135,6 @@
             margin-top: 1px;
         }
 
-        /* ===== ПЕРЕКЛЮЧАТЕЛЬ ===== */
         .toggle-group {
             display: flex;
             gap: 4px;
@@ -180,7 +169,6 @@
             color: rgba(255, 255, 255, 0.25);
         }
 
-        /* ===== КНОПКИ ===== */
         .btn {
             width: 100%;
             padding: 9px;
@@ -254,7 +242,6 @@
             margin-top: 0;
         }
 
-        /* ===== СТАТУС ===== */
         .status {
             text-align: center;
             font-size: 0.55rem;
@@ -267,7 +254,6 @@
         .status .error { color: #ff4444; }
         .status .loading { color: #ffaa00; }
 
-        /* ===== ЛОГ ===== */
         .log {
             background: rgba(0, 0, 0, 0.5);
             border-radius: 8px;
@@ -304,7 +290,6 @@
         .log-entry.info { color: rgba(255, 255, 255, 0.15); }
         .log-entry.system { color: rgba(255, 255, 255, 0.2); }
 
-        /* ===== КАРТОЧКИ ДЕЙСТВИЙ (МАЛЕНЬКИЕ) ===== */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -342,71 +327,6 @@
             font-weight: 600;
         }
 
-        /* ===== ИНСТРУКЦИИ (СКРЫТЫ ДО НАЖАТИЯ) ===== */
-        .instruction-toggle {
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 6px;
-            padding: 4px 10px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.5rem;
-            color: rgba(255, 255, 255, 0.08);
-            transition: 0.2s;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .instruction-toggle:hover {
-            color: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .instruction-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
-            opacity: 0;
-            margin-bottom: 0;
-        }
-
-        .instruction-grid.open {
-            max-height: 200px;
-            opacity: 1;
-            margin-bottom: 6px;
-        }
-
-        .instruction-card {
-            background: rgba(255, 255, 255, 0.005);
-            border: 1px solid rgba(255, 255, 255, 0.015);
-            border-radius: 6px;
-            padding: 5px 4px;
-            text-align: center;
-        }
-
-        .instruction-card .icon {
-            font-size: 0.9rem;
-            display: block;
-        }
-
-        .instruction-card .step {
-            font-size: 0.4rem;
-            color: rgba(255, 255, 255, 0.04);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .instruction-card .desc {
-            font-size: 0.45rem;
-            color: rgba(255, 255, 255, 0.08);
-        }
-
-        /* ===== ЛОТЕРЕЯ ===== */
         .lottery-box {
             background: rgba(255, 255, 255, 0.005);
             border: 1px dashed rgba(255, 255, 255, 0.03);
@@ -446,16 +366,6 @@
             color: rgba(255, 255, 255, 0.04);
         }
 
-        .badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.02);
-            color: rgba(255, 255, 255, 0.06);
-            font-size: 0.35rem;
-            padding: 1px 6px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.005);
-        }
-
         .footer {
             text-align: center;
             font-size: 0.35rem;
@@ -469,7 +379,6 @@
             .container { padding: 14px 12px; }
             h1 { font-size: 1.3rem; }
             .action-grid { grid-template-columns: 1fr 1fr; }
-            .instruction-grid { grid-template-columns: 1fr; }
             .btn-group { flex-direction: column; }
             .btn-group .btn { flex: none; }
         }
@@ -498,69 +407,41 @@
 
             <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ ===== -->
             <div class="toggle-group">
-                <button class="toggle-btn active" id="toggleCookie" onclick="switchMethod('cookie')">🍪 COOKIE</button>
-                <button class="toggle-btn" id="togglePassword" onclick="switchMethod('password')">🔐 ПАРОЛЬ</button>
+                <button class="toggle-btn active" id="togglePassword" onclick="switchMethod('password')">🔐 ПАРОЛЬ</button>
+                <button class="toggle-btn" id="toggleCookie" onclick="switchMethod('cookie')">🍪 COOKIE</button>
             </div>
 
-            <!-- ===== ВХОД ЧЕРЕЗ COOKIE ===== -->
-            <div id="cookieMethod">
-                <div class="input-group">
-                    <label>🍪 .ROBLOSECURITY COOKIE</label>
-                    <input type="text" id="botCookie" class="cookie-input" placeholder="Вставьте .ROBLOSECURITY cookie..." />
-                    <div class="hint">Roblox → F12 → Application → Cookies → .ROBLOSECURITY</div>
-                </div>
-                <button class="btn btn-success" onclick="loginWithCookie()">✅ ВОЙТИ ЧЕРЕЗ COOKIE</button>
-            </div>
-
-            <!-- ===== ВХОД ЧЕРЕЗ ЛОГИН + ПАРОЛЬ ===== -->
-            <div id="passwordMethod" style="display:none;">
+            <!-- ===== ВХОД ЧЕРЕЗ ПАРОЛЬ ===== -->
+            <div id="passwordMethod">
                 <div class="input-group">
                     <label>👤 ЛОГИН</label>
-                    <input type="text" id="botLogin" placeholder="Введите логин..." />
+                    <input type="text" id="botLogin" placeholder="Введите логин аккаунта..." />
                 </div>
                 <div class="input-group">
                     <label>🔐 ПАРОЛЬ</label>
                     <input type="password" id="botPassword" class="password-input" placeholder="Введите пароль..." />
                 </div>
-                <button class="btn btn-success" onclick="loginWithPassword()">✅ ВОЙТИ ПО ПАРОЛЮ</button>
+                <button class="btn btn-success" onclick="loginWithPassword()">✅ ВОЙТИ</button>
+            </div>
+
+            <!-- ===== ВХОД ЧЕРЕЗ COOKIE ===== -->
+            <div id="cookieMethod" style="display:none;">
+                <div class="input-group">
+                    <label>🍪 .ROBLOSECURITY COOKIE</label>
+                    <input type="text" id="botCookie" class="cookie-input" placeholder="Вставьте .ROBLOSECURITY cookie..." />
+                    <div class="hint">Roblox → F12 → Application → Cookies</div>
+                </div>
+                <button class="btn btn-success" onclick="loginWithCookie()">✅ ВОЙТИ</button>
             </div>
 
             <div style="margin-top:3px; text-align:center;">
                 <button class="btn btn-sm btn-outline" onclick="showCookieHelp()">📖 КАК ПОЛУЧИТЬ COOKIE?</button>
-                <button class="btn btn-sm btn-outline" onclick="checkRepoPublic()" style="margin-left:3px;">🔍 ПРОВЕРИТЬ РЕПОЗИТОРИЙ</button>
+                <button class="btn btn-sm btn-outline" onclick="checkRepoPublic()" style="margin-left:3px;">🔍 ПРОВЕРИТЬ</button>
             </div>
         </div>
 
         <!-- ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== -->
         <div id="controlPanel" style="display: none;">
-
-            <!-- ===== ИНСТРУКЦИЯ (СКРЫТА) ===== -->
-            <div class="instruction-toggle" onclick="toggleInstructions()">
-                📖 КАК ДОБАВИТЬ В ДРУЗЬЯ (НАЖМИТЕ)
-            </div>
-
-            <div class="instruction-grid" id="instructionGrid">
-                <div class="instruction-card">
-                    <span class="icon">🔍</span>
-                    <div class="step">ШАГ 1</div>
-                    <div class="desc">Найдите ник бота</div>
-                </div>
-                <div class="instruction-card">
-                    <span class="icon">👤</span>
-                    <div class="step">ШАГ 2</div>
-                    <div class="desc">Откройте профиль</div>
-                </div>
-                <div class="instruction-card">
-                    <span class="icon">➕</span>
-                    <div class="step">ШАГ 3</div>
-                    <div class="desc">Нажмите "Добавить"</div>
-                </div>
-                <div class="instruction-card">
-                    <span class="icon">✅</span>
-                    <div class="step">ШАГ 4</div>
-                    <div class="desc">Ждите подтверждения</div>
-                </div>
-            </div>
 
             <!-- ===== ССЫЛКА ===== -->
             <div class="input-group">
@@ -575,7 +456,7 @@
                     <option value="stand_and_wait">🧍 СТОЯТЬ И ЖДАТЬ</option>
                     <option value="walk_to_player">🚶 ПОДОЙТИ К ИГРОКУ</option>
                     <option value="take_item">📦 ЗАБРАТЬ ПРЕДМЕТ</option>
-                    <option value="leave_game">🚪 ВЫЙТИ ИЗ ИГРЫ</option>
+                    <option value="leave_game">🚪 ВЫЙТИ</option>
                     <option value="auto_friend">👥 АВТОПОДТВЕРЖДЕНИЕ</option>
                     <option value="collect_all">🎁 СОБРАТЬ ВСЁ</option>
                 </select>
@@ -644,15 +525,15 @@
         let currentCookie = '';
         let currentLogin = '';
         let currentPassword = '';
-        let loginMethod = 'cookie';
+        let loginMethod = 'password';
 
         // ===== ПЕРЕКЛЮЧЕНИЕ =====
         function switchMethod(method) {
             loginMethod = method;
-            document.getElementById('toggleCookie').classList.toggle('active', method === 'cookie');
             document.getElementById('togglePassword').classList.toggle('active', method === 'password');
-            document.getElementById('cookieMethod').style.display = method === 'cookie' ? 'block' : 'none';
+            document.getElementById('toggleCookie').classList.toggle('active', method === 'cookie');
             document.getElementById('passwordMethod').style.display = method === 'password' ? 'block' : 'none';
+            document.getElementById('cookieMethod').style.display = method === 'cookie' ? 'block' : 'none';
         }
 
         // ===== ВХОД =====
@@ -660,35 +541,7 @@
             document.getElementById('loginPanel').classList.toggle('open');
         }
 
-        // ===== ИНСТРУКЦИИ =====
-        function toggleInstructions() {
-            document.getElementById('instructionGrid').classList.toggle('open');
-        }
-
-        // ===== ВХОД ЧЕРЕЗ COOKIE =====
-        function loginWithCookie() {
-            const cookie = document.getElementById('botCookie').value.trim();
-
-            if (!cookie) {
-                addLog('error', '❌ ВСТАВЬТЕ .ROBLOSECURITY COOKIE!');
-                return;
-            }
-
-            if (!cookie.startsWith('_|WARNING:-DO-NOT-SHARE') && !cookie.includes('.')) {
-                addLog('error', '❌ НЕВЕРНЫЙ ФОРМАТ COOKIE!');
-                return;
-            }
-
-            currentCookie = cookie;
-            isLoggedIn = true;
-            document.getElementById('loginPanel').classList.remove('open');
-            document.getElementById('controlPanel').style.display = 'block';
-            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● БОТ АВТОРИЗОВАН (COOKIE)</span>';
-            addLog('success', '✅ ВХОД ЧЕРЕЗ COOKIE ВЫПОЛНЕН!');
-            addLog('info', '🔐 СЕССИЯ АКТИВНА.');
-        }
-
-        // ===== ВХОД ЧЕРЕЗ ПАРОЛЬ =====
+        // ===== РЕАЛЬНЫЙ ВХОД ПО ПАРОЛЮ =====
         function loginWithPassword() {
             const login = document.getElementById('botLogin').value.trim();
             const password = document.getElementById('botPassword').value.trim();
@@ -701,14 +554,33 @@
             currentLogin = login;
             currentPassword = password;
             isLoggedIn = true;
+
             document.getElementById('loginPanel').classList.remove('open');
             document.getElementById('controlPanel').style.display = 'block';
-            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● БОТ АВТОРИЗОВАН (ПАРОЛЬ)</span>';
+            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● АВТОРИЗОВАН</span>';
             addLog('success', `✅ ВХОД ВЫПОЛНЕН: ${login}`);
-            addLog('info', '🔐 СЕССИЯ АКТИВНА.');
+            addLog('info', '🔐 ДАННЫЕ СОХРАНЕНЫ ДЛЯ РЕАЛЬНОГО ВХОДА.');
         }
 
-        // ===== ПОМОЩЬ ПО COOKIE =====
+        // ===== РЕАЛЬНЫЙ ВХОД ЧЕРЕЗ COOKIE =====
+        function loginWithCookie() {
+            const cookie = document.getElementById('botCookie').value.trim();
+
+            if (!cookie) {
+                addLog('error', '❌ ВСТАВЬТЕ COOKIE!');
+                return;
+            }
+
+            currentCookie = cookie;
+            isLoggedIn = true;
+
+            document.getElementById('loginPanel').classList.remove('open');
+            document.getElementById('controlPanel').style.display = 'block';
+            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● АВТОРИЗОВАН (COOKIE)</span>';
+            addLog('success', '✅ ВХОД ПО COOKIE ВЫПОЛНЕН!');
+        }
+
+        // ===== ПОМОЩЬ =====
         function showCookieHelp() {
             alert(
                 '🍪 КАК ПОЛУЧИТЬ .ROBLOSECURITY COOKIE:\n\n' +
@@ -733,7 +605,7 @@
                 if (response.status === 200) {
                     const data = await response.json();
                     if (data.private === false) {
-                        addLog('success', `✅ РЕПОЗИТОРИЙ ПУБЛИЧНЫЙ!`);
+                        addLog('success', '✅ РЕПОЗИТОРИЙ ПУБЛИЧНЫЙ!');
                     } else {
                         addLog('error', '❌ РЕПОЗИТОРИЙ ПРИВАТНЫЙ!');
                     }
@@ -745,7 +617,7 @@
             }
         }
 
-        // ===== ЗАПУСК =====
+        // ===== ЗАПУСК БОТА =====
         async function executeBot() {
             if (!isLoggedIn) {
                 addLog('error', '❌ СНАЧАЛА ВОЙДИТЕ!');
