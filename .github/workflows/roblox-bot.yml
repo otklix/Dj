@@ -26,14 +26,6 @@ on:
         required: false
         type: string
         default: 'ВашНик'
-      login:
-        description: '👤 Логин'
-        required: true
-        type: string
-      password:
-        description: '🔐 Пароль'
-        required: true
-        type: string
 
 jobs:
   bot:
@@ -59,8 +51,7 @@ jobs:
           ACTION: ${{ github.event.inputs.action }}
           DURATION: ${{ github.event.inputs.duration }}
           TARGET_NICK: ${{ github.event.inputs.target_nick }}
-          LOGIN: ${{ github.event.inputs.login }}
-          PASSWORD: ${{ github.event.inputs.password }}
+          ROBLOSECURITY: ${{ secrets.ROBLOSECURITY }}
         run: |
           Xvfb :99 -screen 0 1024x768x24 &
           export DISPLAY=:99
