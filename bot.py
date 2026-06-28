@@ -4,6 +4,7 @@ import time
 import subprocess
 import sys
 import requests
+import re
 from datetime import datetime
 
 def log(message):
@@ -14,20 +15,28 @@ def log(message):
 def main():
     log("🚀 ЗАПУСК БОТА...")
 
-    # ===== ПОЛУЧАЕМ ДАННЫЕ ИЗ GITHUB ACTIONS =====
+    # ===== ПОЛУЧАЕМ ДАННЫЕ =====
     login = os.getenv('LOGIN', '').strip()
     password = os.getenv('PASSWORD', '').strip()
     cookie = os.getenv('ROBLOSECURITY', '').strip()
     login_method = os.getenv('LOGIN_METHOD', 'password').strip()
     game_link = os.getenv('GAME_LINK', '').strip()
     action = os.getenv('ACTION', 'stand_and_wait').strip()
-    duration = int(os.getenv('DURATION', '60').strip())
     target_nick = os.getenv('TARGET_NICK', '').strip()
+
+    # ===== КОНВЕРТИРУЕМ ВРЕМЯ (УБИРАЕМ ТОЧКУ) =====
+    duration_str = os.getenv('DURATION', '60').strip()
+    try:
+        duration = int(float(duration_str))  # "7000.0" → 7000
+    except ValueError:
+        duration = 60
+        log(f"⚠️ НЕВЕРНЫЙ ФОРМАТ ВРЕМЕНИ: {duration_str}, ИСПОЛЬЗУЮ 60")
 
     log(f"📌 СПОСОБ: {login_method}")
     log(f"📌 ССЫЛКА: {game_link[:50]}...")
     log(f"📌 ДЕЙСТВИЕ: {action}")
     log(f"📌 ЦЕЛЬ: {target_nick}")
+    log(f"⏱ ВРЕМЯ: {duration} сек")
 
     # ===== ВХОД ЧЕРЕЗ ПАРОЛЬ =====
     if login_method == 'password':
@@ -39,7 +48,6 @@ def main():
         log(f"🔍 ПРОВЕРЯЮ ЛОГИН: {login}")
 
         try:
-            # 1. Получаем CSRF токен
             csrf_response = requests.post('https://auth.roblox.com/v2/logout', headers={
                 'User-Agent': 'Mozilla/5.0'
             })
@@ -49,7 +57,6 @@ def main():
                 log("❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ CSRF ТОКЕН!")
                 sys.exit(1)
 
-            # 2. Отправляем запрос на вход
             login_response = requests.post('https://auth.roblox.com/v2/login', headers={
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrf_token,
@@ -66,10 +73,8 @@ def main():
                 log(f"✅ ВХОД ВЫПОЛНЕН! ID: {data['user']['id']}")
                 log(f"👤 ИМЯ: {data['user']['name']}")
 
-                # Сохраняем cookie
                 set_cookie = login_response.headers.get('set-cookie', '')
                 if set_cookie:
-                    import re
                     match = re.search(r'.ROBLOSECURITY=([^;]+)', set_cookie)
                     if match:
                         cookie = match.group(1)
