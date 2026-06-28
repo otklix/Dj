@@ -17,12 +17,12 @@ on:
           - take_item
           - leave_game
       duration:
-        description: '⏱ Время (сек)'
+        description: '🤫 Время (сек)'
         required: false
-        type: number
-        default: 60
+        type: string  # ← ИЗМЕНИЛ НА STRING
+        default: '60'
       target_nick:
-        description: '👤 Кому отправить запрос'
+        description: '😮‍💨 Кому отправить запрос'
         required: false
         type: string
         default: 'ВашНик'
@@ -34,15 +34,15 @@ on:
           - password
           - cookie
       login:
-        description: '👤 Логин'
+        description: '😦 Логин (для password)'
         required: false
         type: string
       password:
-        description: '🔐 Пароль'
+        description: '🫩 Пароль (для password)'
         required: false
         type: string
       roblosecurity:
-        description: '🍪 Cookie'
+        description: '🍪 Cookie (для cookie)'
         required: false
         type: string
 
