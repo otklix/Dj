@@ -3,9 +3,15 @@ import os
 import time
 import subprocess
 import sys
-import requests
 import re
 from datetime import datetime
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import requests
 
 def log(message):
     timestamp = datetime.now().strftime('%H:%M:%S')
@@ -15,84 +21,88 @@ def log(message):
 def main():
     log("🚀 ЗАПУСК БОТА...")
 
-    # ===== ПОЛУЧАЕМ ДАННЫЕ =====
     login = os.getenv('LOGIN', '').strip()
     password = os.getenv('PASSWORD', '').strip()
-    cookie = os.getenv('ROBLOSECURITY', '').strip()
-    login_method = os.getenv('LOGIN_METHOD', 'password').strip()
     game_link = os.getenv('GAME_LINK', '').strip()
     action = os.getenv('ACTION', 'stand_and_wait').strip()
     target_nick = os.getenv('TARGET_NICK', '').strip()
 
-    # ===== КОНВЕРТИРУЕМ ВРЕМЯ (УБИРАЕМ ТОЧКУ) =====
     duration_str = os.getenv('DURATION', '60').strip()
     try:
-        duration = int(float(duration_str))  # "7000.0" → 7000
+        duration = int(float(duration_str))
     except ValueError:
         duration = 60
-        log(f"⚠️ НЕВЕРНЫЙ ФОРМАТ ВРЕМЕНИ: {duration_str}, ИСПОЛЬЗУЮ 60")
 
-    log(f"📌 СПОСОБ: {login_method}")
+    log(f"📌 ЛОГИН: {login}")
     log(f"📌 ССЫЛКА: {game_link[:50]}...")
     log(f"📌 ДЕЙСТВИЕ: {action}")
-    log(f"📌 ЦЕЛЬ: {target_nick}")
-    log(f"⏱ ВРЕМЯ: {duration} сек")
 
-    # ===== ВХОД ЧЕРЕЗ ПАРОЛЬ =====
-    if login_method == 'password':
-        if not login or not password:
-            log("❌ НЕ ВВЕДЕНЫ ЛОГИН ИЛИ ПАРОЛЬ!")
-            log("💡 ЗАПОЛНИТЕ ПОЛЯ В GITHUB ACTIONS")
+    if not login or not password:
+        log("❌ НЕ ВВЕДЕНЫ ЛОГИН ИЛИ ПАРОЛЬ!")
+        sys.exit(1)
+
+    # ===== ВХОД ЧЕРЕЗ БРАУЗЕР =====
+    log("🌐 ЗАПУСКАЮ БРАУЗЕР ДЛЯ ВХОДА...")
+
+    options = Options()
+    options.add_argument("--headless")  # Без графического интерфейса
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--window-size=1280,720")
+
+    try:
+        driver = webdriver.Firefox(options=options)
+        driver.get("https://www.roblox.com/login")
+
+        log("⏳ ВВОЖУ ЛОГИН И ПАРОЛЬ...")
+        
+        # Ждём загрузки страницы
+        time.sleep(3)
+        
+        # Вводим логин
+        login_input = driver.find_element(By.ID, "login-username")
+        login_input.clear()
+        login_input.send_keys(login)
+        
+        # Вводим пароль
+        password_input = driver.find_element(By.ID, "login-password")
+        password_input.clear()
+        password_input.send_keys(password)
+        
+        # Нажимаем кнопку "Войти"
+        login_button = driver.find_element(By.ID, "login-button")
+        login_button.click()
+        
+        log("⏳ ОЖИДАЮ ВХОД...")
+        time.sleep(5)
+        
+        # Проверяем, успешно ли вошли
+        if "login" in driver.current_url:
+            log("❌ НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ!")
+            driver.quit()
+            sys.exit(1)
+        
+        log("✅ ВХОД ВЫПОЛНЕН!")
+
+        # ===== ЗАБИРАЕМ COOKIE =====
+        cookies = driver.get_cookies()
+        roblosecurity = None
+        for cookie in cookies:
+            if cookie['name'] == '.ROBLOSECURITY':
+                roblosecurity = cookie['value']
+                break
+        
+        driver.quit()
+
+        if not roblosecurity:
+            log("❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ COOKIE!")
             sys.exit(1)
 
-        log(f"🔍 ПРОВЕРЯЮ ЛОГИН: {login}")
+        log("🍪 COOKIE ПОЛУЧЕН АВТОМАТИЧЕСКИ!")
 
-        try:
-            csrf_response = requests.post('https://auth.roblox.com/v2/logout', headers={
-                'User-Agent': 'Mozilla/5.0'
-            })
-            csrf_token = csrf_response.headers.get('x-csrf-token')
-
-            if not csrf_token:
-                log("❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ CSRF ТОКЕН!")
-                sys.exit(1)
-
-            login_response = requests.post('https://auth.roblox.com/v2/login', headers={
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrf_token,
-                'User-Agent': 'Mozilla/5.0'
-            }, json={
-                'ctype': 'Username',
-                'cvalue': login,
-                'password': password
-            })
-
-            data = login_response.json()
-
-            if login_response.status_code == 200 and data.get('user'):
-                log(f"✅ ВХОД ВЫПОЛНЕН! ID: {data['user']['id']}")
-                log(f"👤 ИМЯ: {data['user']['name']}")
-
-                set_cookie = login_response.headers.get('set-cookie', '')
-                if set_cookie:
-                    match = re.search(r'.ROBLOSECURITY=([^;]+)', set_cookie)
-                    if match:
-                        cookie = match.group(1)
-                        log("🍪 COOKIE ПОЛУЧЕН!")
-            else:
-                error_msg = data.get('errors', [{}])[0].get('message', 'НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ')
-                log(f"❌ ОШИБКА ВХОДА: {error_msg}")
-                sys.exit(1)
-
-        except Exception as e:
-            log(f"❌ ОШИБКА: {e}")
-            sys.exit(1)
-
-    elif login_method == 'cookie':
-        if not cookie:
-            log("❌ НЕ ВВЕДЕН COOKIE!")
-            sys.exit(1)
-        log("✅ ВХОД ПО COOKIE ВЫПОЛНЕН!")
+    except Exception as e:
+        log(f"❌ ОШИБКА ВХОДА: {e}")
+        sys.exit(1)
 
     # ===== ЗАПУСК ИГРЫ =====
     log("🚀 ЗАПУСКАЮ ROXBLOX...")
@@ -101,11 +111,10 @@ def main():
     cmd = f"wine {roblox_path} --url {game_link}"
     subprocess.Popen(cmd, shell=True)
 
-    log("⏳ ОЖИДАНИЕ ЗАГРУЗКИ (30 сек)...")
+    log("⏳ ОЖИДАНИЕ ЗАГРУЗКИ...")
     time.sleep(30)
     log("✅ ROXBLOX ЗАПУЩЕН!")
 
-    # ===== ВЫПОЛНЕНИЕ ДЕЙСТВИЯ =====
     log(f"🎯 ВЫПОЛНЯЮ ДЕЙСТВИЕ: {action}")
     time.sleep(duration)
     log("✅ БОТ ЗАВЕРШИЛ РАБОТУ!")
