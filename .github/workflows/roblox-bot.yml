@@ -17,33 +17,22 @@ on:
           - take_item
           - leave_game
       duration:
-        description: '🤫 Время (сек)'
+        description: '⏱ Время (сек)'
         required: false
-        type: string  # ← ИЗМЕНИЛ НА STRING
+        type: string
         default: '60'
       target_nick:
-        description: '😮‍💨 Кому отправить запрос'
+        description: '👤 Кому отправить запрос'
         required: false
         type: string
         default: 'ВашНик'
-      login_method:
-        description: '🔐 Способ входа'
-        required: true
-        type: choice
-        options:
-          - password
-          - cookie
       login:
-        description: '😦 Логин (для password)'
-        required: false
+        description: '👤 Логин'
+        required: true
         type: string
       password:
-        description: '🫩 Пароль (для password)'
-        required: false
-        type: string
-      roblosecurity:
-        description: '🍪 Cookie (для cookie)'
-        required: false
+        description: '🔐 Пароль'
+        required: true
         type: string
 
 jobs:
@@ -51,27 +40,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+      
+      - name: Setup Firefox & GeckoDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox
+          wget https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz
+          tar -xvzf geckodriver-v0.34.0-linux64.tar.gz
+          chmod +x geckodriver
+          sudo mv geckodriver /usr/local/bin/
+      
       - name: Setup Wine
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y wine64 wine32 xvfb xdotool scrot
-          pip install pyautogui requests
+          pip install -r requirements.txt
+      
       - name: Run Bot
         env:
           GAME_LINK: ${{ github.event.inputs.game_link }}
           ACTION: ${{ github.event.inputs.action }}
           DURATION: ${{ github.event.inputs.duration }}
           TARGET_NICK: ${{ github.event.inputs.target_nick }}
-          LOGIN_METHOD: ${{ github.event.inputs.login_method }}
           LOGIN: ${{ github.event.inputs.login }}
           PASSWORD: ${{ github.event.inputs.password }}
-          ROBLOSECURITY: ${{ github.event.inputs.roblosecurity }}
         run: |
-          Xvfb :99 -screen 0 1024x768x24 &
+          Xvfb :99 -screen 0 1280x720x24 &
           export DISPLAY=:99
           python bot.py
