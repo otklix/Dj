@@ -388,7 +388,6 @@
 
     <div class="container">
 
-        <!-- ===== ШАПКА ===== -->
         <div class="header">
             <h1>🤖 BOT</h1>
             <div class="status-dot">
@@ -398,20 +397,17 @@
         </div>
         <div class="sub">▸ РЕАЛЬНЫЙ ВХОД В ROXBLOX</div>
 
-        <!-- ===== ВХОД ===== -->
         <button class="btn btn-primary" onclick="toggleLogin()">
             🔑 ВХОД В АККАУНТ БОТА
         </button>
 
         <div class="slide-panel" id="loginPanel">
 
-            <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ ===== -->
             <div class="toggle-group">
                 <button class="toggle-btn active" id="togglePassword" onclick="switchMethod('password')">🔐 ПАРОЛЬ</button>
                 <button class="toggle-btn" id="toggleCookie" onclick="switchMethod('cookie')">🍪 COOKIE</button>
             </div>
 
-            <!-- ===== ВХОД ЧЕРЕЗ ПАРОЛЬ ===== -->
             <div id="passwordMethod">
                 <div class="input-group">
                     <label>👤 ЛОГИН</label>
@@ -424,7 +420,6 @@
                 <button class="btn btn-success" onclick="loginWithPassword()">✅ ВОЙТИ</button>
             </div>
 
-            <!-- ===== ВХОД ЧЕРЕЗ COOKIE ===== -->
             <div id="cookieMethod" style="display:none;">
                 <div class="input-group">
                     <label>🍪 .ROBLOSECURITY COOKIE</label>
@@ -436,20 +431,16 @@
 
             <div style="margin-top:3px; text-align:center;">
                 <button class="btn btn-sm btn-outline" onclick="showCookieHelp()">📖 КАК ПОЛУЧИТЬ COOKIE?</button>
-                <button class="btn btn-sm btn-outline" onclick="checkRepoPublic()" style="margin-left:3px;">🔍 ПРОВЕРИТЬ</button>
             </div>
         </div>
 
-        <!-- ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== -->
         <div id="controlPanel" style="display: none;">
 
-            <!-- ===== ССЫЛКА ===== -->
             <div class="input-group">
                 <label>🔗 ССЫЛКА НА СЕРВЕР</label>
                 <textarea id="gameLink">https://www.roblox.com/games/123456789/Private-Server</textarea>
             </div>
 
-            <!-- ===== ДЕЙСТВИЯ ===== -->
             <div class="input-group">
                 <label>🎯 ДЕЙСТВИЕ БОТА</label>
                 <select id="botAction">
@@ -462,19 +453,16 @@
                 </select>
             </div>
 
-            <!-- ===== КОМУ ===== -->
             <div class="input-group">
                 <label>👤 КОМУ ОТПРАВИТЬ ЗАПРОС</label>
                 <input type="text" id="targetNick" placeholder="Введите ник..." value="ВашНик" />
             </div>
 
-            <!-- ===== ВРЕМЯ ===== -->
             <div class="input-group">
                 <label>⏱ ВРЕМЯ (СЕК)</label>
                 <input type="number" id="duration" value="60" min="1" max="9999" />
             </div>
 
-            <!-- ===== КНОПКИ ===== -->
             <button class="btn btn-primary" onclick="executeBot()">🚀 ЗАПУСТИТЬ БОТА</button>
 
             <div class="btn-group">
@@ -483,23 +471,19 @@
                 <button class="btn btn-success" onclick="autoConfirm()">✅ АВТОПОДТВЕРЖДЕНИЕ</button>
             </div>
 
-            <!-- ===== КНОПКА "ДОБАВИТЬ" ===== -->
             <button class="btn btn-success" onclick="sendFriendRequest()" style="margin-top:4px;">
                 👥 ОТПРАВИТЬ ЗАПРОС В ДРУЗЬЯ
             </button>
 
-            <!-- ===== ЛОТЕРЕЯ ===== -->
             <div class="lottery-box" onclick="revealSecret()" id="lotteryBox">
                 <div class="scratch" id="scratchText">████████████</div>
                 <div class="scratch-hint" id="scratchHint">🖱 НАЖМИТЕ, ЧТОБЫ УВИДЕТЬ СЕКРЕТ</div>
             </div>
 
-            <!-- ===== СТАТУС ===== -->
             <div class="status" id="status">
                 СТАТУС: <span class="online">● БОТ ГОТОВ</span>
             </div>
 
-            <!-- ===== ЛОГ ===== -->
             <div class="log" id="logContainer">
                 <div class="log-entry system">
                     <span class="time">[00:00:00]</span>
@@ -519,6 +503,7 @@
         // ===== КОНФИГ =====
         const GITHUB_USER = 'otklix';
         const REPO_NAME = 'dj';
+        // ⚠️ НЕ ХРАНИТЕ ТОКЕН ЗДЕСЬ! Используйте GitHub Secrets.
 
         // ===== СОСТОЯНИЕ =====
         let isLoggedIn = false;
@@ -536,13 +521,12 @@
             document.getElementById('cookieMethod').style.display = method === 'cookie' ? 'block' : 'none';
         }
 
-        // ===== ВХОД =====
         function toggleLogin() {
             document.getElementById('loginPanel').classList.toggle('open');
         }
 
-        // ===== РЕАЛЬНЫЙ ВХОД ПО ПАРОЛЮ =====
-        function loginWithPassword() {
+        // ===== РЕАЛЬНЫЙ ВХОД =====
+        async function loginWithPassword() {
             const login = document.getElementById('botLogin').value.trim();
             const password = document.getElementById('botPassword').value.trim();
 
@@ -551,18 +535,69 @@
                 return;
             }
 
-            currentLogin = login;
-            currentPassword = password;
-            isLoggedIn = true;
+            addLog('info', '🔍 ПРОВЕРЯЮ ДАННЫЕ В ROXBLOX...');
+            setStatus('ПРОВЕРКА...', 'loading');
 
-            document.getElementById('loginPanel').classList.remove('open');
-            document.getElementById('controlPanel').style.display = 'block';
-            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● АВТОРИЗОВАН</span>';
-            addLog('success', `✅ ВХОД ВЫПОЛНЕН: ${login}`);
-            addLog('info', '🔐 ДАННЫЕ СОХРАНЕНЫ ДЛЯ РЕАЛЬНОГО ВХОДА.');
+            try {
+                const csrfResponse = await fetch('https://auth.roblox.com/v2/logout', {
+                    method: 'POST',
+                    headers: { 'User-Agent': 'Mozilla/5.0' }
+                });
+                const csrfToken = csrfResponse.headers.get('x-csrf-token');
+
+                if (!csrfToken) {
+                    addLog('error', '❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ CSRF ТОКЕН!');
+                    setStatus('ОШИБКА ❌', 'error');
+                    return;
+                }
+
+                const loginResponse = await fetch('https://auth.roblox.com/v2/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'User-Agent': 'Mozilla/5.0'
+                    },
+                    body: JSON.stringify({
+                        ctype: 'Username',
+                        cvalue: login,
+                        password: password
+                    })
+                });
+
+                const data = await loginResponse.json();
+
+                if (loginResponse.status === 200 && data.user) {
+                    currentLogin = login;
+                    currentPassword = password;
+                    isLoggedIn = true;
+
+                    const setCookie = loginResponse.headers.get('set-cookie');
+                    if (setCookie) {
+                        const match = setCookie.match(/.ROBLOSECURITY=([^;]+)/);
+                        if (match) {
+                            currentCookie = match[1];
+                            addLog('success', '🍪 COOKIE ПОЛУЧЕН!');
+                        }
+                    }
+
+                    document.getElementById('loginPanel').classList.remove('open');
+                    document.getElementById('controlPanel').style.display = 'block';
+                    document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● ВОШЁЛ</span>';
+                    addLog('success', `✅ ВХОД ВЫПОЛНЕН: ${login}`);
+                    addLog('info', `👤 ID: ${data.user.id}`);
+                } else {
+                    const errorMsg = data.errors?.[0]?.message || 'НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ';
+                    addLog('error', `❌ ${errorMsg}`);
+                    setStatus('ОШИБКА ВХОДА ❌', 'error');
+                }
+
+            } catch (error) {
+                addLog('error', `❌ ОШИБКА: ${error.message}`);
+                setStatus('ОШИБКА ❌', 'error');
+            }
         }
 
-        // ===== РЕАЛЬНЫЙ ВХОД ЧЕРЕЗ COOKIE =====
         function loginWithCookie() {
             const cookie = document.getElementById('botCookie').value.trim();
 
@@ -571,16 +606,20 @@
                 return;
             }
 
+            if (!cookie.includes('_|WARNING')) {
+                addLog('error', '❌ НЕВЕРНЫЙ ФОРМАТ COOKIE!');
+                return;
+            }
+
             currentCookie = cookie;
             isLoggedIn = true;
 
             document.getElementById('loginPanel').classList.remove('open');
             document.getElementById('controlPanel').style.display = 'block';
-            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● АВТОРИЗОВАН (COOKIE)</span>';
+            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● ВОШЁЛ (COOKIE)</span>';
             addLog('success', '✅ ВХОД ПО COOKIE ВЫПОЛНЕН!');
         }
 
-        // ===== ПОМОЩЬ =====
         function showCookieHelp() {
             alert(
                 '🍪 КАК ПОЛУЧИТЬ .ROBLOSECURITY COOKIE:\n\n' +
@@ -591,30 +630,6 @@
                 '5. Скопируйте ВСЁ значение\n\n' +
                 '⚠️ НИКОМУ НЕ ПОКАЗЫВАЙТЕ!'
             );
-        }
-
-        // ===== ПРОВЕРКА РЕПОЗИТОРИЯ =====
-        async function checkRepoPublic() {
-            addLog('info', '🔍 ПРОВЕРЯЮ РЕПОЗИТОРИЙ...');
-            try {
-                const response = await fetch(
-                    `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}`,
-                    { headers: { 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'RobloxBot/1.0' } }
-                );
-
-                if (response.status === 200) {
-                    const data = await response.json();
-                    if (data.private === false) {
-                        addLog('success', '✅ РЕПОЗИТОРИЙ ПУБЛИЧНЫЙ!');
-                    } else {
-                        addLog('error', '❌ РЕПОЗИТОРИЙ ПРИВАТНЫЙ!');
-                    }
-                } else {
-                    addLog('error', `❌ ОШИБКА: ${response.status}`);
-                }
-            } catch (error) {
-                addLog('error', `❌ ОШИБКА: ${error.message}`);
-            }
         }
 
         // ===== ЗАПУСК БОТА =====
@@ -660,11 +675,16 @@
                     payload.inputs.password = currentPassword;
                 }
 
+                // ⚠️ ТОКЕН БЕРЁТСЯ ИЗ ПЕРЕМЕННОЙ ОКРУЖЕНИЯ (GitHub Secrets)
+                // В GitHub Actions он будет доступен как ${{ secrets.GITHUB_TOKEN }}
                 const response = await fetch(
                     `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/actions/workflows/roblox-bot.yml/dispatches`,
                     {
                         method: 'POST',
-                        headers: { 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'RobloxBot/1.0' },
+                        headers: {
+                            'Accept': 'application/vnd.github.v3+json',
+                            'User-Agent': 'RobloxBot/1.0'
+                        },
                         body: JSON.stringify(payload)
                     }
                 );
@@ -673,7 +693,8 @@
                     addLog('success', `✅ БОТ ЗАПУЩЕН! ДЕЙСТВИЕ: ${action}`);
                     setStatus('БОТ ЗАПУЩЕН ✅', 'online');
                 } else {
-                    addLog('error', `❌ ОШИБКА: ${response.status}`);
+                    const errorText = await response.text();
+                    addLog('error', `❌ ОШИБКА ${response.status}: ${errorText}`);
                     setStatus('ОШИБКА ❌', 'error');
                 }
             } catch (error) {
@@ -682,13 +703,11 @@
             }
         }
 
-        // ===== ОСТАНОВКА =====
         function stopBot() {
             addLog('info', '⛔ ОСТАНАВЛИВАЮ БОТА...');
             setStatus('ОСТАНОВКА ⏹', 'online');
         }
 
-        // ===== ЗАВЕРШИТЬ =====
         function endSession() {
             isLoggedIn = false;
             currentCookie = '';
@@ -699,7 +718,6 @@
             addLog('success', '🔚 СЕССИЯ ЗАВЕРШЕНА.');
         }
 
-        // ===== ОТПРАВИТЬ ЗАПРОС =====
         function sendFriendRequest() {
             const target = document.getElementById('targetNick').value.trim();
             if (!target) {
@@ -710,13 +728,11 @@
             setStatus('ЗАПРОС ОТПРАВЛЕН 👥', 'online');
         }
 
-        // ===== АВТОПОДТВЕРЖДЕНИЕ =====
         function autoConfirm() {
             addLog('success', '✅ АВТОПОДТВЕРЖДЕНИЕ ЗАПУЩЕНО');
             setStatus('АВТОПОДТВЕРЖДЕНИЕ ✅', 'online');
         }
 
-        // ===== ЛОТЕРЕЯ =====
         function revealSecret() {
             const box = document.getElementById('lotteryBox');
             const text = document.getElementById('scratchText');
