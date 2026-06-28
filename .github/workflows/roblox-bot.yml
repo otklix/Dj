@@ -36,19 +36,37 @@ jobs:
     
     steps:
       - name: 📥 Клонирование
-        uses: actions/checkout@v4  # Обновлено до v4
+        uses: actions/checkout@v4
       
       - name: 🐍 Установка Python
-        uses: actions/setup-python@v5  # Обновлено до v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       
-      - name: 📦 Установка зависимостей
+      - name: 📦 Установка зависимостей (ИСПРАВЛЕНО)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            wine64 wine32 xvfb x11vnc xdotool \
-            imagemagick wget unzip python3-pip
+            wine64 \
+            xvfb \
+            x11vnc \
+            xdotool \
+            imagemagick \
+            wget \
+            unzip \
+            python3-pip \
+            scrot \
+            gnupg \
+            software-properties-common
+          
+          # Добавляем репозиторий для Wine (исправляет ошибку с wine32)
+          sudo dpkg --add-architecture i386
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -sc)/winehq-$(lsb_release -sc).sources
+          sudo apt-get update
+          sudo apt-get install -y --install-recommends winehq-stable
+          
           pip install -r bot/requirements.txt
       
       - name: 🎮 Установка Roblox
@@ -65,28 +83,27 @@ jobs:
           BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}
           USER_PASSWORD: ${{ github.event.inputs.user_password }}
         run: |
-          Xvfb :99 -screen 0 1280x720x24 &
           export DISPLAY=:99
+          Xvfb :99 -screen 0 1280x720x24 &
+          sleep 3
+          
           cd bot
           python3 bot.py
       
-      - name: 📸 Скриншот
+      - name: 📸 Скриншот (ИСПРАВЛЕНО)
         if: always()
         run: |
           export DISPLAY=:99
           sleep 5
-          scrot /tmp/game_screenshot.png
+          mkdir -p /tmp/artifacts
+          scrot /tmp/artifacts/game_screenshot.png || echo "Скриншот не создан"
       
-      - name: 📤 Загрузка скриншота
+      - name: 📤 Загрузка артефактов (ИСПРАВЛЕНО)
         if: always()
-        uses: actions/upload-artifact@v4  # ← Исправлено: v3 → v4
+        uses: actions/upload-artifact@v4
         with:
-          name: game-screenshot
-          path: /tmp/game_screenshot.png
-      
-      - name: 📤 Загрузка логов
-        if: always()
-        uses: actions/upload-artifact@v4  # ← Исправлено: v3 → v4
-        with:
-          name: bot-logs
-          path: /tmp/bot.log
+          name: bot-artifacts
+          path: |
+            /tmp/artifacts/
+            /tmp/bot.log
+          if-no-files-found: warn
