@@ -1,15 +1,109 @@
-import os, time, subprocess
+#!/usr/bin/env python3
+import os
+import time
+import subprocess
+import sys
+import requests
+from datetime import datetime
 
-PASSWORD = os.getenv('BOT_PASSWORD')
-USER_PASSWORD = os.getenv('USER_PASSWORD')
+def log(message):
+    timestamp = datetime.now().strftime('%H:%M:%S')
+    print(f"[{timestamp}] 🤖 {message}")
+    sys.stdout.flush()
 
-if USER_PASSWORD != PASSWORD:
-    print("❌ Неверный пароль!")
-    exit(1)
+def main():
+    log("🚀 ЗАПУСК БОТА...")
 
-print("✅ Пароль верный! Запускаю Roblox...")
-subprocess.Popen(["wine", "/home/runner/.wine/drive_c/users/runner/Local Settings/Application Data/Roblox/Versions/RobloxPlayerLauncher.exe", "--url", os.getenv('GAME_LINK')])
-time.sleep(20)
-print("✅ Бот в игре!")
-time.sleep(int(os.getenv('DURATION', 60)))
-print("✅ Готово!")
+    # ===== ПОЛУЧАЕМ ДАННЫЕ ИЗ GITHUB ACTIONS =====
+    login = os.getenv('LOGIN', '').strip()
+    password = os.getenv('PASSWORD', '').strip()
+    cookie = os.getenv('ROBLOSECURITY', '').strip()
+    login_method = os.getenv('LOGIN_METHOD', 'password').strip()
+    game_link = os.getenv('GAME_LINK', '').strip()
+    action = os.getenv('ACTION', 'stand_and_wait').strip()
+    duration = int(os.getenv('DURATION', '60').strip())
+    target_nick = os.getenv('TARGET_NICK', '').strip()
+
+    log(f"📌 СПОСОБ: {login_method}")
+    log(f"📌 ССЫЛКА: {game_link[:50]}...")
+    log(f"📌 ДЕЙСТВИЕ: {action}")
+    log(f"📌 ЦЕЛЬ: {target_nick}")
+
+    # ===== ВХОД ЧЕРЕЗ ПАРОЛЬ =====
+    if login_method == 'password':
+        if not login or not password:
+            log("❌ НЕ ВВЕДЕНЫ ЛОГИН ИЛИ ПАРОЛЬ!")
+            log("💡 ЗАПОЛНИТЕ ПОЛЯ В GITHUB ACTIONS")
+            sys.exit(1)
+
+        log(f"🔍 ПРОВЕРЯЮ ЛОГИН: {login}")
+
+        try:
+            # 1. Получаем CSRF токен
+            csrf_response = requests.post('https://auth.roblox.com/v2/logout', headers={
+                'User-Agent': 'Mozilla/5.0'
+            })
+            csrf_token = csrf_response.headers.get('x-csrf-token')
+
+            if not csrf_token:
+                log("❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ CSRF ТОКЕН!")
+                sys.exit(1)
+
+            # 2. Отправляем запрос на вход
+            login_response = requests.post('https://auth.roblox.com/v2/login', headers={
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf_token,
+                'User-Agent': 'Mozilla/5.0'
+            }, json={
+                'ctype': 'Username',
+                'cvalue': login,
+                'password': password
+            })
+
+            data = login_response.json()
+
+            if login_response.status_code == 200 and data.get('user'):
+                log(f"✅ ВХОД ВЫПОЛНЕН! ID: {data['user']['id']}")
+                log(f"👤 ИМЯ: {data['user']['name']}")
+
+                # Сохраняем cookie
+                set_cookie = login_response.headers.get('set-cookie', '')
+                if set_cookie:
+                    import re
+                    match = re.search(r'.ROBLOSECURITY=([^;]+)', set_cookie)
+                    if match:
+                        cookie = match.group(1)
+                        log("🍪 COOKIE ПОЛУЧЕН!")
+            else:
+                error_msg = data.get('errors', [{}])[0].get('message', 'НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ')
+                log(f"❌ ОШИБКА ВХОДА: {error_msg}")
+                sys.exit(1)
+
+        except Exception as e:
+            log(f"❌ ОШИБКА: {e}")
+            sys.exit(1)
+
+    elif login_method == 'cookie':
+        if not cookie:
+            log("❌ НЕ ВВЕДЕН COOKIE!")
+            sys.exit(1)
+        log("✅ ВХОД ПО COOKIE ВЫПОЛНЕН!")
+
+    # ===== ЗАПУСК ИГРЫ =====
+    log("🚀 ЗАПУСКАЮ ROXBLOX...")
+
+    roblox_path = "/home/runner/.wine/drive_c/users/runner/Local Settings/Application Data/Roblox/Versions/RobloxPlayerLauncher.exe"
+    cmd = f"wine {roblox_path} --url {game_link}"
+    subprocess.Popen(cmd, shell=True)
+
+    log("⏳ ОЖИДАНИЕ ЗАГРУЗКИ (30 сек)...")
+    time.sleep(30)
+    log("✅ ROXBLOX ЗАПУЩЕН!")
+
+    # ===== ВЫПОЛНЕНИЕ ДЕЙСТВИЯ =====
+    log(f"🎯 ВЫПОЛНЯЮ ДЕЙСТВИЕ: {action}")
+    time.sleep(duration)
+    log("✅ БОТ ЗАВЕРШИЛ РАБОТУ!")
+
+if __name__ == "__main__":
+    main()
