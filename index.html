@@ -1,102 +1,352 @@
-#!/usr/bin/env python3
-import os
-import time
-import subprocess
-import json
-import sys
-import requests
-from datetime import datetime
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🤖 Roblox Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 20px;
+            padding: 20px 16px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        .sub {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.08);
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            padding-bottom: 6px;
+        }
+        .input-group {
+            margin-bottom: 8px;
+        }
+        label {
+            display: block;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.15);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.8rem;
+            outline: none;
+        }
+        input:focus {
+            border-color: rgba(255,255,255,0.15);
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .btn-primary {
+            background: #ffffff;
+            color: #0a0a0a;
+        }
+        .btn-primary:hover {
+            background: #eee;
+        }
+        .btn-success {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .btn-danger {
+            background: rgba(255,50,50,0.06);
+            border: 1px solid rgba(255,50,50,0.08);
+            color: #ff5555;
+        }
+        .btn-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .btn-group .btn {
+            flex: 1;
+            margin-top: 0;
+        }
+        .status {
+            text-align: center;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.06);
+            margin: 8px 0 4px;
+        }
+        .status .online { color: #fff; }
+        .status .error { color: #ff4444; }
+        .status .loading { color: #ffaa00; }
+        .log {
+            background: rgba(0,0,0,0.4);
+            border-radius: 6px;
+            padding: 4px 8px;
+            max-height: 50px;
+            overflow-y: auto;
+            font-size: 0.45rem;
+            color: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.01);
+            margin-top: 4px;
+        }
+        .log-entry {
+            padding: 1px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.003);
+        }
+        .log-entry .time {
+            color: rgba(255,255,255,0.02);
+            margin-right: 4px;
+        }
+        .log-entry.success { color: #fff; }
+        .log-entry.error { color: #ff4444; }
+        .log-entry.info { color: rgba(255,255,255,0.15); }
+        .log-entry.system { color: rgba(255,255,255,0.2); }
+        .footer {
+            text-align: center;
+            font-size: 0.3rem;
+            color: rgba(255,255,255,0.01);
+            margin-top: 10px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.003);
+        }
+    </style>
+</head>
+<body>
 
-def log(message):
-    timestamp = datetime.now().strftime('%H:%M:%S')
-    print(f"[{timestamp}] 🤖 {message}")
-    sys.stdout.flush()
+    <div class="container">
 
-def main():
-    log("🚀 ЗАПУСК ROXBLOX БОТА...")
-    
-    # Получаем переменные из GitHub Actions
-    login_method = os.getenv('LOGIN_METHOD', 'password')
-    login = os.getenv('LOGIN', '')
-    password = os.getenv('PASSWORD', '')
-    cookie = os.getenv('ROBLOSECURITY', '')
-    game_link = os.getenv('GAME_LINK', '')
-    action = os.getenv('ACTION', 'stand_and_wait')
-    duration = int(os.getenv('DURATION', 60))
-    target_nick = os.getenv('TARGET_NICK', '')
-    
-    log(f"📌 СПОСОБ ВХОДА: {login_method}")
-    log(f"📌 ССЫЛКА: {game_link[:50]}...")
-    log(f"📌 ДЕЙСТВИЕ: {action}")
-    log(f"📌 ЦЕЛЬ: {target_nick}")
-    
-    # ===== ВХОД В ROXBLOX =====
-    if login_method == 'password':
-        if not login or not password:
-            log("❌ НЕ ВВЕДЕНЫ ЛОГИН ИЛИ ПАРОЛЬ!")
-            log("💡 ЗАПОЛНИТЕ ПОЛЯ В GITHUB ACTIONS")
-            sys.exit(1)
-        
-        log(f"🔍 ПРОВЕРЯЮ ЛОГИН: {login}")
-        
-        try:
-            # 1. Получаем CSRF токен
-            csrf_response = requests.post('https://auth.roblox.com/v2/logout', headers={
-                'User-Agent': 'Mozilla/5.0'
-            })
-            csrf_token = csrf_response.headers.get('x-csrf-token')
-            
-            if not csrf_token:
-                log("❌ НЕ УДАЛОСЬ ПОЛУЧИТЬ CSRF ТОКЕН!")
-                sys.exit(1)
-            
-            # 2. Отправляем запрос на вход
-            login_response = requests.post('https://auth.roblox.com/v2/login', headers={
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrf_token,
-                'User-Agent': 'Mozilla/5.0'
-            }, json={
-                'ctype': 'Username',
-                'cvalue': login,
-                'password': password
-            })
-            
-            data = login_response.json()
-            
-            if login_response.status_code == 200 and data.get('user'):
-                log(f"✅ ВХОД ВЫПОЛНЕН! ID: {data['user']['id']}")
-                log(f"👤 ИМЯ: {data['user']['name']}")
-                
-                # Сохраняем cookie
-                set_cookie = login_response.headers.get('set-cookie', '')
-                if set_cookie:
-                    match = set_cookie.match(/.ROBLOSECURITY=([^;]+)/)
-                    if match:
-                        cookie = match[1]
-                        log("🍪 COOKIE ПОЛУЧЕН!")
-            else:
-                error_msg = data.get('errors', [{}])[0].get('message', 'НЕВЕРНЫЙ ЛОГИН ИЛИ ПАРОЛЬ')
-                log(f"❌ ОШИБКА ВХОДА: {error_msg}")
-                sys.exit(1)
-                
-        except Exception as e:
-            log(f"❌ ОШИБКА: {e}")
-            sys.exit(1)
-    
-    elif login_method == 'cookie':
-        if not cookie:
-            log("❌ НЕ ВВЕДЕН COOKIE!")
-            sys.exit(1)
-        log("✅ ВХОД ПО COOKIE ВЫПОЛНЕН!")
-    
-    # ===== ЗАПУСК ИГРЫ =====
-    log("🚀 ЗАПУСКАЮ ROXBLOX...")
-    
-    # Запускаем Roblox через Wine
-    roblox_path = "/home/runner/.wine/drive_c/users/runner/Local Settings/Application Data/Roblox/Versions/RobloxPlayerLauncher.exe"
-    cmd = f"wine {roblox_path} --url {game_link}"
-    subprocess.Popen(cmd, shell=True)
-    
-    log("⏳ ОЖИДАНИЕ ЗАГРУЗКИ...")
-    time.sleep(30)
-    log("✅ ROXBLOX ЗАПУ
+        <h1>🤖 BOT</h1>
+        <div class="sub">▸ УПРАВЛЕНИЕ БОТОМ</div>
+
+        <!-- ===== ВХОД ===== -->
+        <button class="btn btn-primary" onclick="toggleLogin()">
+            🔑 ВХОД В АККАУНТ
+        </button>
+
+        <div id="loginPanel" style="display:none; margin-top:10px;">
+            <div class="input-group">
+                <label>👤 ЛОГИН</label>
+                <input type="text" id="botLogin" placeholder="Введите логин..." />
+            </div>
+            <div class="input-group">
+                <label>🔐 ПАРОЛЬ</label>
+                <input type="password" id="botPassword" placeholder="Введите пароль..." />
+            </div>
+            <button class="btn btn-success" onclick="loginLocal()">✅ ВОЙТИ</button>
+        </div>
+
+        <!-- ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== -->
+        <div id="controlPanel" style="display:none; margin-top:10px;">
+
+            <div class="input-group">
+                <label>🔗 ССЫЛКА НА СЕРВЕР</label>
+                <input type="text" id="gameLink" value="https://www.roblox.com/games/123456789/Private-Server" />
+            </div>
+
+            <div class="input-group">
+                <label>🎯 ДЕЙСТВИЕ</label>
+                <select id="botAction">
+                    <option value="stand_and_wait">🧍 СТОЯТЬ И ЖДАТЬ</option>
+                    <option value="walk_to_player">🚶 ПОДОЙТИ К ИГРОКУ</option>
+                    <option value="take_item">📦 ЗАБРАТЬ ПРЕДМЕТ</option>
+                    <option value="leave_game">🚪 ВЫЙТИ</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>👤 КОМУ ОТПРАВИТЬ ЗАПРОС</label>
+                <input type="text" id="targetNick" placeholder="Введите ник..." value="ВашНик" />
+            </div>
+
+            <button class="btn btn-primary" onclick="executeBot()">🚀 ЗАПУСТИТЬ БОТА</button>
+
+            <div class="btn-group">
+                <button class="btn btn-danger" onclick="stopBot()">⛔ СТОП</button>
+                <button class="btn btn-success" onclick="endSession()">🔚 ЗАВЕРШИТЬ</button>
+            </div>
+
+            <div class="status" id="status">
+                СТАТУС: <span class="online">● БОТ ГОТОВ</span>
+            </div>
+
+            <div class="log" id="logContainer">
+                <div class="log-entry system"><span class="time">[00:00]</span> ▸ СИСТЕМА ЗАГРУЖЕНА</div>
+            </div>
+
+        </div>
+
+        <div class="footer">═══════════ GITHUB ACTIONS ═══════════</div>
+
+    </div>
+
+    <script>
+        const GITHUB_USER = 'otklix';
+        const REPO_NAME = 'dj';
+
+        let isLoggedIn = false;
+        let currentLogin = '';
+        let currentPassword = '';
+
+        function toggleLogin() {
+            const panel = document.getElementById('loginPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function loginLocal() {
+            const login = document.getElementById('botLogin').value.trim();
+            const password = document.getElementById('botPassword').value.trim();
+
+            if (!login || !password) {
+                addLog('error', '❌ ВВЕДИТЕ ЛОГИН И ПАРОЛЬ!');
+                return;
+            }
+
+            currentLogin = login;
+            currentPassword = password;
+            isLoggedIn = true;
+
+            document.getElementById('loginPanel').style.display = 'none';
+            document.getElementById('controlPanel').style.display = 'block';
+            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● ВОШЁЛ</span>';
+            addLog('success', `✅ ВХОД: ${login}`);
+        }
+
+        async function executeBot() {
+            if (!isLoggedIn) {
+                addLog('error', '❌ СНАЧАЛА ВОЙДИТЕ!');
+                return;
+            }
+
+            const link = document.getElementById('gameLink').value.trim();
+            const target = document.getElementById('targetNick').value.trim();
+            const action = document.getElementById('botAction').value;
+            const duration = document.getElementById('duration')?.value || 60;
+
+            if (!link.includes('roblox.com')) {
+                addLog('error', '❌ ВВЕДИТЕ ССЫЛКУ НА ROXBLOX!');
+                return;
+            }
+            if (!target) {
+                addLog('error', '❌ ВВЕДИТЕ НИК ЦЕЛИ!');
+                return;
+            }
+
+            addLog('info', `🎯 ОТПРАВЛЯЮ КОМАНДУ "${action}"`);
+            setStatus('ОТПРАВКА...', 'loading');
+
+            try {
+                const payload = {
+                    ref: 'main',
+                    inputs: {
+                        game_link: link,
+                        action: action,
+                        duration: String(duration),
+                        target_nick: target,
+                        login_method: 'password',
+                        login: currentLogin,
+                        password: currentPassword,
+                        roblosecurity: ''
+                    }
+                };
+
+                const response = await fetch(
+                    `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/actions/workflows/roblox-bot.yml/dispatches`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/vnd.github.v3+json',
+                            'User-Agent': 'RobloxBot/1.0'
+                        },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                if (response.status === 204) {
+                    addLog('success', `✅ БОТ ЗАПУЩЕН! ДЕЙСТВИЕ: ${action}`);
+                    setStatus('БОТ ЗАПУЩЕН ✅', 'online');
+                } else {
+                    const errorText = await response.text();
+                    addLog('error', `❌ ОШИБКА ${response.status}: ${errorText}`);
+                    setStatus('ОШИБКА ❌', 'error');
+                }
+            } catch (error) {
+                addLog('error', `❌ ОШИБКА: ${error.message}`);
+                setStatus('ОШИБКА ❌', 'error');
+            }
+        }
+
+        function stopBot() {
+            addLog('info', '⛔ ОСТАНАВЛИВАЮ...');
+            setStatus('ОСТАНОВКА ⏹', 'online');
+        }
+
+        function endSession() {
+            isLoggedIn = false;
+            currentLogin = '';
+            currentPassword = '';
+            document.getElementById('controlPanel').style.display = 'none';
+            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● ОЖИДАНИЕ</span>';
+            addLog('success', '🔚 СЕССИЯ ЗАВЕРШЕНА.');
+        }
+
+        function setStatus(text, type) {
+            document.getElementById('status').innerHTML = `СТАТУС: <span class="${type}">● ${text}</span>`;
+        }
+
+        function addLog(type, message) {
+            const log = document.getElementById('logContainer');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
+            log.prepend(entry);
+            while (log.children.length > 30) log.removeChild(log.lastChild);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            addLog('system', '▸ СИСТЕМА ЗАГРУЖЕНА.');
+            addLog('info', `📌 ${GITHUB_USER}/${REPO_NAME}`);
+        });
+    </script>
+
+</body>
+</html>
