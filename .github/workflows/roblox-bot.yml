@@ -60,6 +60,13 @@ jobs:
           TARGET_NICK: ${{ github.event.inputs.target_nick }}
           ROBLOSECURITY: ${{ secrets.ROBLOSECURITY }}
         run: |
-          Xvfb :99 -screen 0 1024x768x24 &
+          # Запускаем Xvfb с правильными параметрами
+          Xvfb :99 -screen 0 1280x720x24 -ac +extension GLX +render -noreset &
+          sleep 3
           export DISPLAY=:99
+          
+          # Проверяем, что Xvfb запущен
+          xdpyinfo -display :99 > /dev/null 2>&1 || { echo "❌ Xvfb не запущен!"; exit 1; }
+          
+          echo "✅ Xvfb запущен на :99"
           python bot.py
