@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Roblox Bot Control</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a1a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(0,245,255,0.05) 0%, transparent 60%),
+                              radial-gradient(ellipse at 80% 50%, rgba(255,0,230,0.05) 0%, transparent 60%);
+        }
+        .container {
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: 35px;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00f5ff, #ff00e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+        }
+        .input-group { margin-bottom: 18px; }
+        label {
+            display: block;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.03);
+            border: 2px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        textarea { min-height: 60px; resize: vertical; }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #00f5ff;
+            box-shadow: 0 0 30px rgba(0,245,255,0.05);
+        }
+        select option { background: #1a1a2e; color: #fff; }
+        .password-input { font-size: 1.1rem; letter-spacing: 2px; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00f5ff, #0088cc);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,245,255,0.2); }
+        .btn:active { transform: translateY(0px); }
+        .btn-danger { background: linear-gradient(135deg, #ff0055, #cc0033); }
+        .btn-danger:hover { box-shadow: 0 8px 40px rgba(255,0,85,0.2); }
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+        }
+        .status .online { color: #00ff88; }
+        .status .error { color: #ff4444; }
+        .status .loading { color: #ffaa00; }
+        .hint { font-size: 0.7rem; color: rgba(255,255,255,0.2); margin-top: 4px; }
+        .log {
+            margin-top: 15px;
+            max-height: 120px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+        }
+        .log::-webkit-scrollbar { width: 3px; }
+        .log::-webkit-scrollbar-thumb { background: rgba(0,245,255,0.2); border-radius: 2px; }
+        .log-entry { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .log-entry .time { color: rgba(255,255,255,0.15); margin-right: 8px; }
+        .log-entry.success { color: #00ff88; }
+        .log-entry.error { color: #ff4444; }
+        .log-entry.info { color: rgba(255,255,255,0.5); }
+        .log-entry.system { color: #00f5ff; }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            color: rgba(255,255,255,0.1);
+            font-size: 0.7rem;
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🤖 Roblox Bot</h1>
+
+        <!-- 🔐 ПАРОЛЬ -->
+        <div class="input-group">
+            <label>🔐 Пароль</label>
+            <input type="password" id="botPassword" class="password-input" placeholder="Введите секретный пароль...">
+            <div class="hint">💡 Пароль, который вы установили в GitHub Secrets</div>
+        </div>
+
+        <!-- 🔗 ССЫЛКА -->
+        <div class="input-group">
+            <label>🔗 Ссылка на игру</label>
+            <textarea id="gameLink" placeholder="Вставьте ссылку на приватный сервер Roblox...">https://www.roblox.com/games/123456789/Private-Server</textarea>
+        </div>
+
+        <!-- 🎯 ДЕЙСТВИЕ -->
+        <div class="input-group">
+            <label>🎯 Действие бота</label>
+            <select id="botAction">
+                <option value="stand_and_wait">🧍 Стоять и ждать</option>
+                <option value="walk_to_player">🚶 Подойти к игроку</option>
+                <option value="take_item">📦 Забрать предмет</option>
+                <option value="leave_game">🚪 Выйти из игры</option>
+            </select>
+        </div>
+
+        <!-- 👤 НИК -->
+        <div class="input-group">
+            <label>👤 Ваш ник в Roblox</label>
+            <input type="text" id="playerNick" placeholder="Введите ваш ник..." value="ВашНик">
+        </div>
+
+        <!-- ⏱ ВРЕМЯ -->
+        <div class="input-group">
+            <label>⏱ Время ожидания (сек)</label>
+            <input type="number" id="duration" value="60" min="1" max="3600">
+        </div>
+
+        <!-- КНОПКИ -->
+        <button class="btn" onclick="executeBot()">🚀 ЗАПУСТИТЬ БОТА</button>
+        <button class="btn btn-danger" onclick="stopBot()" style="margin-top: 8px;">⛔ ОСТАНОВИТЬ</button>
+
+        <!-- СТАТУС -->
+        <div class="status" id="status">
+            Статус: <span class="online">● Ожидание</span>
+        </div>
+
+        <!-- ЛОГ -->
+        <div class="log" id="logContainer">
+            <div class="log-entry system">
+                <span class="time">[00:00:00]</span>
+                🔐 Введите пароль и нажмите "ЗАПУСТИТЬ БОТА"
+            </div>
+        </div>
+
+        <div class="footer">
+            🤖 Roblox Bot Control Panel v3.0
+        </div>
+    </div>
+
+    <script>
+        function addLog(type, message) {
+            const container = document.getElementById('logContainer');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
+            container.prepend(entry);
+            while (container.children.length > 50) container.removeChild(container.lastChild);
+        }
+
+        function setStatus(text, type) {
+            document.getElementById('status').innerHTML = `Статус: <span class="${type}">● ${text}</span>`;
+        }
+
+        // ===== ЗАПУСТИТЬ БОТА =====
+        async function executeBot() {
+            const password = document.getElementById('botPassword').value.trim();
+            const link = document.getElementById('gameLink').value.trim();
+            const nick = document.getElementById('playerNick').value.trim();
+            const action = document.getElementById('botAction').value;
+            const duration = document.getElementById('duration').value;
+
+            if (!password) { addLog('error', '❌ Введите пароль!'); return; }
+            if (!link || !link.includes('roblox.com')) { addLog('error', '❌ Введите ссылку на Roblox!'); return; }
+            if (!nick) { addLog('error', '❌ Введите ваш ник!'); return; }
+
+            addLog('info', `🎯 Отправляю команду "${action}" для ${nick}`);
+            setStatus('Отправка...', 'loading');
+
+            try {
+                const response = await fetch('/api/trigger', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: password,
+                        game_link: link,
+                        player_nick: nick,
+                        action: action,
+                        duration: parseInt(duration)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    addLog('success', `✅ Бот запущен! Действие: ${action}`);
+                    setStatus('Бот запущен ✅', 'online');
+                } else {
+                    addLog('error', `❌ ${data.message || 'Ошибка'}`);
+                    setStatus('Ошибка ❌', 'error');
+                }
+            } catch (error) {
+                addLog('error', `❌ Ошибка: ${error.message}`);
+                setStatus('Ошибка соединения ❌', 'error');
+            }
+        }
+
+        // ===== ОСТАНОВИТЬ БОТА =====
+        async function stopBot() {
+            addLog('info', '⛔ Останавливаю бота...');
+            setStatus('Остановка...', 'loading');
+
+            try {
+                const response = await fetch('/api/stop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: document.getElementById('botPassword').value.trim()
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    addLog('success', '✅ Бот остановлен');
+                    setStatus('Остановлен ⏹', 'online');
+                } else {
+                    addLog('error', `❌ ${data.message || 'Ошибка'}`);
+                }
+            } catch (error) {
+                addLog('error', `❌ Ошибка: ${error.message}`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('botPassword').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') executeBot();
+            });
+            addLog('system', '🔐 Система готова. Введите пароль и запустите бота.');
+        });
+    </script>
+
+</body>
+</html>
