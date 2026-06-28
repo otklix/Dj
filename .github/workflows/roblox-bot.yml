@@ -43,13 +43,11 @@ jobs:
         with:
           python-version: '3.10'
       
-      - name: 📦 Установка зависимостей (ИСПРАВЛЕНО)
+      - name: 📦 Установка зависимостей
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            wine64 \
             xvfb \
-            x11vnc \
             xdotool \
             imagemagick \
             wget \
@@ -59,7 +57,7 @@ jobs:
             gnupg \
             software-properties-common
           
-          # Добавляем репозиторий для Wine (исправляет ошибку с wine32)
+          # Установка Wine (правильный способ)
           sudo dpkg --add-architecture i386
           sudo mkdir -pm755 /etc/apt/keyrings
           sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
@@ -68,6 +66,15 @@ jobs:
           sudo apt-get install -y --install-recommends winehq-stable
           
           pip install -r bot/requirements.txt
+      
+      - name: 🔍 Проверка файлов
+        run: |
+          echo "=== Структура проекта ==="
+          ls -la
+          echo "=== Папка bot ==="
+          ls -la bot/ || echo "Папка bot не найдена!"
+          echo "=== config.json ==="
+          cat bot/config.json || echo "config.json не найден!"
       
       - name: 🎮 Установка Roblox
         run: |
@@ -85,20 +92,25 @@ jobs:
         run: |
           export DISPLAY=:99
           Xvfb :99 -screen 0 1280x720x24 &
-          sleep 3
+          sleep 5
+          
+          echo "=== Запуск бота ==="
+          echo "GAME_LINK: $GAME_LINK"
+          echo "ACTION: $ACTION"
+          echo "DURATION: $DURATION"
           
           cd bot
-          python3 bot.py
+          python3 -u bot.py 2>&1 | tee /tmp/bot.log
       
-      - name: 📸 Скриншот (ИСПРАВЛЕНО)
+      - name: 📸 Скриншот
         if: always()
         run: |
           export DISPLAY=:99
-          sleep 5
+          sleep 3
           mkdir -p /tmp/artifacts
-          scrot /tmp/artifacts/game_screenshot.png || echo "Скриншот не создан"
+          scrot /tmp/artifacts/game_screenshot.png 2>/dev/null || echo "⚠️ Скриншот не создан"
       
-      - name: 📤 Загрузка артефактов (ИСПРАВЛЕНО)
+      - name: 📤 Загрузка артефактов
         if: always()
         uses: actions/upload-artifact@v4
         with:
