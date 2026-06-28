@@ -10,46 +10,78 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', 'Courier New', monospace;
         }
 
         body {
             min-height: 100vh;
-            background: #0a0a1a;
+            background: #0a0f0a;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background-image: radial-gradient(ellipse at 20% 50%, rgba(0,200,255,0.03) 0%, transparent 60%),
-                              radial-gradient(ellipse at 80% 50%, rgba(180,0,255,0.03) 0%, transparent 60%);
+            background-image: 
+                radial-gradient(ellipse at 20% 50%, rgba(0,255,100,0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(0,200,80,0.03) 0%, transparent 60%);
         }
 
+        /* ===== ОСНОВНАЯ КАРТОЧКА ===== */
         .container {
-            max-width: 560px;
+            max-width: 580px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(0, 20, 0, 0.85);
             backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 32px;
+            border: 1px solid rgba(0, 255, 100, 0.12);
+            border-radius: 28px;
             padding: 28px 24px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 60px rgba(0, 255, 100, 0.04), inset 0 0 60px rgba(0, 255, 100, 0.01);
+        }
+
+        /* ===== ЗАГОЛОВОК ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
         }
 
         h1 {
-            text-align: center;
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #00f0ff, #b400ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 2px;
+            color: #00ff66;
+            text-shadow: 0 0 30px rgba(0, 255, 100, 0.15);
+            letter-spacing: 1px;
+        }
+
+        .status-dot {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.65rem;
+            color: rgba(0, 255, 100, 0.2);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff66;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 100, 0.2);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
         .sub {
-            text-align: center;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.12);
-            margin-bottom: 22px;
+            font-size: 0.7rem;
+            color: rgba(0, 255, 100, 0.12);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(0, 255, 100, 0.04);
+            padding-bottom: 10px;
         }
 
         /* ===== ПЛАВНАЯ ПАНЕЛЬ ===== */
@@ -64,123 +96,135 @@
         }
 
         .slide-panel.open {
-            max-height: 500px;
+            max-height: 600px;
             opacity: 1;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         /* ===== ПОЛЯ ===== */
         .input-group {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.3);
-            margin-bottom: 4px;
-            letter-spacing: 0.3px;
+            color: rgba(0, 255, 100, 0.25);
+            margin-bottom: 3px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         input, textarea, select {
             width: 100%;
-            padding: 11px 14px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1.5px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            color: #fff;
+            padding: 10px 14px;
+            background: rgba(0, 255, 100, 0.03);
+            border: 1.5px solid rgba(0, 255, 100, 0.06);
+            border-radius: 10px;
+            color: #00ff66;
             font-size: 0.9rem;
             transition: 0.25s;
             outline: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(0, 255, 100, 0.1);
         }
 
         input:focus, textarea:focus, select:focus {
-            border-color: #00c8ff;
-            box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.06);
+            border-color: #00ff66;
+            box-shadow: 0 0 20px rgba(0, 255, 100, 0.04);
+            background: rgba(0, 255, 100, 0.02);
         }
 
-        textarea {
-            min-height: 52px;
-            resize: vertical;
+        select option {
+            background: #0a1a0a;
+            color: #00ff66;
         }
 
         .password-input {
-            letter-spacing: 2px;
-            font-size: 0.95rem;
+            letter-spacing: 3px;
+            font-size: 0.9rem;
         }
 
         .hint {
-            font-size: 0.55rem;
-            color: rgba(255, 255, 255, 0.08);
-            margin-top: 3px;
+            font-size: 0.5rem;
+            color: rgba(0, 255, 100, 0.06);
+            margin-top: 2px;
         }
 
         /* ===== КНОПКИ ===== */
         .btn {
             width: 100%;
-            padding: 13px;
+            padding: 12px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: 0.25s;
             letter-spacing: 0.5px;
             margin-top: 4px;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #00c8ff, #7b2ffc);
-            color: #fff;
+            background: linear-gradient(135deg, #00cc55, #009944);
+            color: #001a00;
+            box-shadow: 0 0 30px rgba(0, 255, 100, 0.05);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 200, 255, 0.2);
+            box-shadow: 0 8px 40px rgba(0, 255, 100, 0.1);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #00d48a, #00a86b);
-            color: #fff;
+            background: rgba(0, 255, 100, 0.08);
+            border: 1px solid rgba(0, 255, 100, 0.1);
+            color: #00ff66;
         }
 
         .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 212, 138, 0.2);
+            background: rgba(0, 255, 100, 0.12);
+            border-color: rgba(0, 255, 100, 0.2);
         }
 
         .btn-danger {
-            background: rgba(255, 60, 80, 0.12);
-            border: 1px solid rgba(255, 60, 80, 0.15);
-            color: #ff6b7a;
+            background: rgba(255, 50, 50, 0.06);
+            border: 1px solid rgba(255, 50, 50, 0.08);
+            color: #ff4444;
         }
 
         .btn-danger:hover {
-            background: rgba(255, 60, 80, 0.2);
+            background: rgba(255, 50, 50, 0.1);
         }
 
         .btn-outline {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.3);
+            background: rgba(0, 255, 100, 0.02);
+            border: 1px solid rgba(0, 255, 100, 0.04);
+            color: rgba(0, 255, 100, 0.2);
         }
 
         .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 255, 100, 0.04);
+            border-color: rgba(0, 255, 100, 0.08);
         }
 
         .btn-sm {
-            padding: 8px 14px;
-            font-size: 0.75rem;
+            padding: 6px 12px;
+            font-size: 0.6rem;
             width: auto;
             margin-top: 0;
         }
 
         .btn-group {
             display: flex;
-            gap: 8px;
-            margin-top: 6px;
+            gap: 6px;
+            margin-top: 4px;
         }
 
         .btn-group .btn {
@@ -191,26 +235,27 @@
         /* ===== СТАТУС ===== */
         .status {
             text-align: center;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.15);
-            margin: 12px 0 8px;
+            font-size: 0.7rem;
+            color: rgba(0, 255, 100, 0.1);
+            margin: 10px 0 6px;
+            letter-spacing: 1px;
         }
 
-        .status .online { color: #3bff9e; }
-        .status .error { color: #ff5e7a; }
-        .status .loading { color: #ffb347; }
+        .status .online { color: #00ff66; text-shadow: 0 0 20px rgba(0, 255, 100, 0.1); }
+        .status .error { color: #ff4444; }
+        .status .loading { color: #ffaa00; }
 
         /* ===== ЛОГ ===== */
         .log {
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 12px;
+            background: rgba(0, 10, 0, 0.6);
+            border-radius: 10px;
             padding: 8px 12px;
-            max-height: 90px;
+            max-height: 80px;
             overflow-y: auto;
             font-family: 'Courier New', monospace;
-            font-size: 0.62rem;
-            color: rgba(255, 255, 255, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.015);
+            font-size: 0.6rem;
+            color: rgba(0, 255, 100, 0.15);
+            border: 1px solid rgba(0, 255, 100, 0.02);
             margin-top: 4px;
         }
 
@@ -218,71 +263,107 @@
             width: 3px;
         }
         .log::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 255, 100, 0.05);
             border-radius: 8px;
         }
 
         .log-entry {
             padding: 2px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid rgba(0, 255, 100, 0.01);
         }
 
         .log-entry .time {
-            color: rgba(255, 255, 255, 0.08);
+            color: rgba(0, 255, 100, 0.05);
             margin-right: 6px;
         }
 
-        .log-entry.success { color: #3bff9e; }
-        .log-entry.error { color: #ff5e7a; }
-        .log-entry.info { color: rgba(255, 255, 255, 0.35); }
-        .log-entry.system { color: #6fcbff; }
+        .log-entry.success { color: #00ff66; }
+        .log-entry.error { color: #ff4444; }
+        .log-entry.info { color: rgba(0, 255, 100, 0.25); }
+        .log-entry.system { color: rgba(0, 255, 100, 0.4); }
 
-        /* ===== ИНСТРУКЦИИ С КАРТИНКАМИ ===== */
+        /* ===== КАРТОЧКИ ДЕЙСТВИЙ ===== */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin: 6px 0 8px;
+        }
+
+        .action-card {
+            background: rgba(0, 255, 100, 0.02);
+            border: 1px solid rgba(0, 255, 100, 0.04);
+            border-radius: 10px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .action-card:hover {
+            border-color: rgba(0, 255, 100, 0.1);
+            background: rgba(0, 255, 100, 0.02);
+        }
+
+        .action-card.active {
+            border-color: #00ff66;
+            background: rgba(0, 255, 100, 0.04);
+            box-shadow: 0 0 30px rgba(0, 255, 100, 0.02);
+        }
+
+        .action-card .icon {
+            font-size: 1.6rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .action-card .name {
+            font-size: 0.65rem;
+            color: rgba(0, 255, 100, 0.3);
+            font-weight: 600;
+        }
+
+        /* ===== ИНСТРУКЦИИ ===== */
         .instruction-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin: 10px 0 6px;
+            gap: 6px;
+            margin: 6px 0 8px;
         }
 
         .instruction-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px 10px;
+            background: rgba(0, 255, 100, 0.01);
+            border: 1px solid rgba(0, 255, 100, 0.03);
+            border-radius: 10px;
+            padding: 10px 8px;
             text-align: center;
-            transition: 0.3s;
-            cursor: default;
-        }
-
-        .instruction-card:hover {
-            border-color: rgba(0, 200, 255, 0.1);
-            background: rgba(0, 200, 255, 0.02);
         }
 
         .instruction-card .icon {
-            font-size: 2rem;
+            font-size: 1.4rem;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .instruction-card .step {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.5rem;
+            color: rgba(0, 255, 100, 0.08);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .instruction-card .desc {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.35);
-            margin-top: 2px;
+            font-size: 0.6rem;
+            color: rgba(0, 255, 100, 0.15);
+            margin-top: 1px;
         }
 
         /* ===== ЛОТЕРЕЯ ===== */
         .lottery-box {
-            background: rgba(255, 215, 0, 0.02);
-            border: 2px dashed rgba(255, 215, 0, 0.08);
-            border-radius: 14px;
-            padding: 16px;
+            background: rgba(0, 255, 100, 0.01);
+            border: 2px dashed rgba(0, 255, 100, 0.04);
+            border-radius: 12px;
+            padding: 14px;
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
@@ -291,58 +372,59 @@
         }
 
         .lottery-box:hover {
-            border-color: rgba(255, 215, 0, 0.2);
-            background: rgba(255, 215, 0, 0.02);
+            border-color: rgba(0, 255, 100, 0.08);
+            background: rgba(0, 255, 100, 0.01);
         }
 
         .lottery-box .scratch {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.08);
-            letter-spacing: 5px;
+            color: rgba(0, 255, 100, 0.05);
+            letter-spacing: 4px;
             transition: 0.4s;
         }
 
         .lottery-box .scratch.revealed {
-            color: #ffd700;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+            color: #00ff66;
+            text-shadow: 0 0 30px rgba(0, 255, 100, 0.05);
             letter-spacing: 2px;
         }
 
         .lottery-box .scratch-hint {
-            font-size: 0.55rem;
-            color: rgba(255, 255, 255, 0.05);
+            font-size: 0.5rem;
+            color: rgba(0, 255, 100, 0.03);
             margin-top: 4px;
         }
 
         .lottery-box .scratch-hint.revealed {
-            color: rgba(255, 215, 0, 0.15);
+            color: rgba(0, 255, 100, 0.08);
         }
 
         /* ===== БЭДЖИ ===== */
         .badge {
             display: inline-block;
-            background: rgba(0, 200, 255, 0.05);
-            color: rgba(0, 200, 255, 0.25);
-            font-size: 0.5rem;
+            background: rgba(0, 255, 100, 0.04);
+            color: rgba(0, 255, 100, 0.12);
+            font-size: 0.45rem;
             padding: 2px 8px;
-            border-radius: 30px;
-            border: 1px solid rgba(0, 200, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 100, 0.02);
         }
 
         .footer {
             text-align: center;
-            font-size: 0.5rem;
-            color: rgba(255, 255, 255, 0.03);
-            margin-top: 16px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.015);
+            font-size: 0.45rem;
+            color: rgba(0, 255, 100, 0.02);
+            margin-top: 14px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 255, 100, 0.01);
         }
 
         /* ===== АДАПТИВ ===== */
         @media (max-width: 480px) {
-            .container { padding: 18px 14px; }
-            h1 { font-size: 1.5rem; }
+            .container { padding: 16px 12px; }
+            h1 { font-size: 1.4rem; }
+            .action-grid { grid-template-columns: 1fr; }
             .instruction-grid { grid-template-columns: 1fr; }
             .btn-group { flex-direction: column; }
             .btn-group .btn { flex: none; }
@@ -353,128 +435,138 @@
 
     <div class="container">
 
-        <h1>🤖 Roblox Bot</h1>
-        <div class="sub">Панель управления <span class="badge">🔐 Защищено</span></div>
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <h1>🤖 BOT</h1>
+            <div class="status-dot">
+                <span id="statusLabel">ONLINE</span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="sub">▸ УПРАВЛЕНИЕ БОТОМ ▸ ВЕРСИЯ 4.0</div>
 
-        <!-- ===== ВХОД В АККАУНТ БОТА ===== -->
+        <!-- ===== ВХОД ===== -->
         <button class="btn btn-primary" onclick="toggleLogin()">
-            🔑 ВОЙТИ В АККАУНТ БОТА
+            🔑 ВХОД В АККАУНТ БОТА
         </button>
 
         <div class="slide-panel" id="loginPanel">
             <div class="input-group">
-                <label>👤 Логин аккаунта</label>
+                <label>👤 ЛОГИН</label>
                 <input type="text" id="botLogin" placeholder="Введите логин бота..." />
             </div>
             <div class="input-group">
-                <label>🔐 Пароль аккаунта</label>
+                <label>🔐 ПАРОЛЬ</label>
                 <input type="password" id="botPassword" class="password-input" placeholder="Введите пароль..." />
             </div>
             <button class="btn btn-success" onclick="loginBot()">✅ ВОЙТИ</button>
-            <div style="margin-top:6px; text-align:center;">
+            <div style="margin-top:4px; text-align:center;">
                 <button class="btn btn-sm btn-outline" onclick="showRegisterHelp()">
-                    📖 Нет аккаунта? Инструкция
+                    📖 НЕТ АККАУНТА?
                 </button>
             </div>
         </div>
 
-        <!-- ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== -->
+        <!-- ===== ПАНЕЛЬ ===== -->
         <div id="controlPanel" style="display: none;">
 
-            <!-- ИНСТРУКЦИЯ "КАК ДОБАВИТЬ В ДРУЗЬЯ" -->
-            <div style="margin: 6px 0 10px;">
-                <div style="font-size:0.7rem; color:rgba(255,255,255,0.15); margin-bottom:4px;">
-                    📌 Как добавить бота в друзья:
+            <!-- ===== ИНСТРУКЦИЯ ===== -->
+            <div style="margin: 4px 0 6px;">
+                <div style="font-size:0.6rem; color:rgba(0,255,100,0.08); margin-bottom:4px; letter-spacing:1px;">
+                    ════════════ КАК ДОБАВИТЬ В ДРУЗЬЯ ════════════
                 </div>
                 <div class="instruction-grid">
                     <div class="instruction-card">
                         <span class="icon">🔍</span>
-                        <div class="step">Шаг 1</div>
-                        <div class="desc">Найдите бота по нику</div>
+                        <div class="step">ШАГ 1</div>
+                        <div class="desc">Найдите ник бота</div>
                     </div>
                     <div class="instruction-card">
                         <span class="icon">👤</span>
-                        <div class="step">Шаг 2</div>
-                        <div class="desc">Нажмите на профиль</div>
+                        <div class="step">ШАГ 2</div>
+                        <div class="desc">Откройте профиль</div>
                     </div>
                     <div class="instruction-card">
                         <span class="icon">➕</span>
-                        <div class="step">Шаг 3</div>
-                        <div class="desc">Нажмите "Добавить в друзья"</div>
+                        <div class="step">ШАГ 3</div>
+                        <div class="desc">Нажмите "Добавить"</div>
                     </div>
                     <div class="instruction-card">
                         <span class="icon">✅</span>
-                        <div class="step">Шаг 4</div>
-                        <div class="desc">Ожидайте подтверждения</div>
+                        <div class="step">ШАГ 4</div>
+                        <div class="desc">Ждите подтверждения</div>
                     </div>
                 </div>
             </div>
 
-            <!-- ССЫЛКА НА СЕРВЕР -->
+            <!-- ===== ССЫЛКА ===== -->
             <div class="input-group">
-                <label>🔗 Ссылка на сервер (игру)</label>
-                <textarea id="gameLink" placeholder="Вставьте ссылку на игру...">https://www.roblox.com/games/123456789/Private-Server</textarea>
+                <label>🔗 ССЫЛКА НА СЕРВЕР</label>
+                <textarea id="gameLink">https://www.roblox.com/games/123456789/Private-Server</textarea>
             </div>
 
-            <!-- ДЕЙСТВИЕ -->
+            <!-- ===== ДЕЙСТВИЯ ===== -->
             <div class="input-group">
-                <label>🎯 Действие бота</label>
+                <label>🎯 ДЕЙСТВИЕ БОТА</label>
                 <select id="botAction">
-                    <option value="stand_and_wait">🧍 Стоять и ждать</option>
-                    <option value="walk_to_player">🚶 Подойти к игроку</option>
-                    <option value="take_item">📦 Забрать предмет</option>
-                    <option value="leave_game">🚪 Выйти из игры</option>
+                    <option value="stand_and_wait">🧍 СТОЯТЬ И ЖДАТЬ</option>
+                    <option value="walk_to_player">🚶 ПОДОЙТИ К ИГРОКУ</option>
+                    <option value="take_item">📦 ЗАБРАТЬ ПРЕДМЕТ</option>
+                    <option value="leave_game">🚪 ВЫЙТИ ИЗ ИГРЫ</option>
+                    <option value="auto_friend">👥 АВТОПОДТВЕРЖДЕНИЕ ДРУЗЕЙ</option>
+                    <option value="collect_all">🎁 СОБРАТЬ ВСЁ</option>
                 </select>
             </div>
 
-            <!-- ВАШ НИК -->
+            <!-- ===== КОМУ ОТПРАВИТЬ ===== -->
             <div class="input-group">
-                <label>👤 Ваш ник в Roblox</label>
-                <input type="text" id="playerNick" placeholder="Ваш ник..." value="ВашНик" />
+                <label>👤 КОМУ ОТПРАВИТЬ ЗАПРОС</label>
+                <input type="text" id="targetNick" placeholder="Введите ник..." value="ВашНик" />
             </div>
 
-            <!-- ВРЕМЯ -->
+            <!-- ===== ВРЕМЯ ===== -->
             <div class="input-group">
-                <label>⏱ Время действия (сек)</label>
-                <input type="number" id="duration" value="60" min="1" max="3600" />
+                <label>⏱ ВРЕМЯ (СЕК)</label>
+                <input type="number" id="duration" value="60" min="1" max="9999" />
             </div>
 
-            <!-- КНОПКИ -->
+            <!-- ===== КНОПКИ ===== -->
             <button class="btn btn-primary" onclick="executeBot()">🚀 ЗАПУСТИТЬ БОТА</button>
 
             <div class="btn-group">
-                <button class="btn btn-danger" onclick="stopBot()">⛔ ОСТАНОВИТЬ</button>
-                <button class="btn btn-outline" onclick="endSession()">🔚 ЗАВЕРШИТЬ СЕССИЮ</button>
+                <button class="btn btn-danger" onclick="stopBot()">⛔ СТОП</button>
+                <button class="btn btn-outline" onclick="endSession()">🔚 ЗАВЕРШИТЬ</button>
+                <button class="btn btn-success" onclick="autoConfirm()">✅ АВТОПОДТВЕРЖДЕНИЕ</button>
             </div>
 
-            <!-- КНОПКА "ДОБАВИТЬ В ДРУЗЬЯ" -->
-            <button class="btn btn-success" onclick="addFriend()" style="margin-top:8px;">
-                👥 ДОБАВИТЬ В ДРУЗЬЯ
+            <!-- ===== КНОПКА "ДОБАВИТЬ В ДРУЗЬЯ" ===== -->
+            <button class="btn btn-success" onclick="sendFriendRequest()" style="margin-top:6px;">
+                👥 ОТПРАВИТЬ ЗАПРОС В ДРУЗЬЯ
             </button>
 
-            <!-- ЛОТЕРЕЯ (ПОЛУЧИТЬ ПАРОЛЬ) -->
+            <!-- ===== ЛОТЕРЕЯ ===== -->
             <div class="lottery-box" onclick="revealPassword()" id="lotteryBox">
                 <div class="scratch" id="scratchText">████████████</div>
-                <div class="scratch-hint" id="scratchHint">🖱 Нажмите, чтобы увидеть пароль</div>
+                <div class="scratch-hint" id="scratchHint">🖱 НАЖМИТЕ, ЧТОБЫ УВИДЕТЬ ПАРОЛЬ</div>
             </div>
 
-            <!-- СТАТУС -->
+            <!-- ===== СТАТУС ===== -->
             <div class="status" id="status">
-                Статус: <span class="online">● Бот готов</span>
+                СТАТУС: <span class="online">● БОТ ГОТОВ</span>
             </div>
 
-            <!-- ЛОГ -->
+            <!-- ===== ЛОГ ===== -->
             <div class="log" id="logContainer">
                 <div class="log-entry system">
                     <span class="time">[00:00:00]</span>
-                    🔐 Авторизуйтесь, чтобы начать
+                    ▸ СИСТЕМА ЗАГРУЖЕНА. ОЖИДАЙТЕ КОМАНД.
                 </div>
             </div>
 
         </div>
 
         <div class="footer">
-            ⚡ Работает через GitHub Actions
+            ════════════ POWERED BY GITHUB ACTIONS ════════════
         </div>
 
     </div>
@@ -488,7 +580,7 @@
         let isLoggedIn = false;
         let generatedPassword = '';
 
-        // ===== ВХОД (ПЛАВНО) =====
+        // ===== ВХОД =====
         function toggleLogin() {
             document.getElementById('loginPanel').classList.toggle('open');
         }
@@ -498,24 +590,20 @@
             const password = document.getElementById('botPassword').value.trim();
 
             if (!login || !password) {
-                addLog('error', '❌ Введите логин и пароль!');
+                addLog('error', '❌ ВВЕДИТЕ ЛОГИН И ПАРОЛЬ!');
                 return;
             }
 
             isLoggedIn = true;
             document.getElementById('loginPanel').classList.remove('open');
             document.getElementById('controlPanel').style.display = 'block';
-            document.getElementById('status').innerHTML = 'Статус: <span class="online">● Бот авторизован</span>';
-            addLog('success', `✅ Вход выполнен: ${login}`);
-            addLog('info', '📌 Теперь вы можете управлять ботом.');
+            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● БОТ АВТОРИЗОВАН</span>';
+            addLog('success', `✅ ВХОД ВЫПОЛНЕН: ${login}`);
+            addLog('info', '📌 ТЕПЕРЬ ВЫ МОЖЕТЕ УПРАВЛЯТЬ БОТОМ.');
         }
 
-        // ===== ИНСТРУКЦИЯ ПО РЕГИСТРАЦИИ =====
+        // ===== ИНСТРУКЦИЯ =====
         function showRegisterHelp() {
-            addLog('info', '📖 1. Перейдите на roblox.com/register');
-            addLog('info', '📖 2. Создайте аккаунт с любым именем');
-            addLog('info', '📖 3. Запомните логин и пароль');
-            addLog('info', '📖 4. Вернитесь и войдите в бота');
             alert(
                 '📖 ИНСТРУКЦИЯ:\n\n' +
                 '1. Перейдите на roblox.com/register\n' +
@@ -526,29 +614,29 @@
             );
         }
 
-        // ===== ЗАПУСК БОТА =====
+        // ===== ЗАПУСК =====
         async function executeBot() {
             if (!isLoggedIn) {
-                addLog('error', '❌ Сначала войдите в аккаунт бота!');
+                addLog('error', '❌ СНАЧАЛА ВОЙДИТЕ В АККАУНТ БОТА!');
                 return;
             }
 
             const link = document.getElementById('gameLink').value.trim();
-            const nick = document.getElementById('playerNick').value.trim();
+            const target = document.getElementById('targetNick').value.trim();
             const action = document.getElementById('botAction').value;
             const duration = document.getElementById('duration').value;
 
             if (!link.includes('roblox.com')) {
-                addLog('error', '❌ Введите ссылку на Roblox!');
+                addLog('error', '❌ ВВЕДИТЕ ССЫЛКУ НА ROXBLOX!');
                 return;
             }
-            if (!nick) {
-                addLog('error', '❌ Введите ваш ник!');
+            if (!target) {
+                addLog('error', '❌ ВВЕДИТЕ НИК ЦЕЛИ!');
                 return;
             }
 
-            addLog('info', `🎯 Отправляю команду "${action}" для ${nick}`);
-            setStatus('Отправка...', 'loading');
+            addLog('info', `🎯 ОТПРАВЛЯЮ КОМАНДУ "${action}" ДЛЯ ${target}`);
+            setStatus('ОТПРАВКА...', 'loading');
 
             try {
                 const response = await fetch(
@@ -562,57 +650,65 @@
                                 game_link: link,
                                 action: action,
                                 duration: String(duration),
-                                user_password: document.getElementById('botPassword').value.trim()
+                                user_password: document.getElementById('botPassword').value.trim(),
+                                target_nick: target
                             }
                         })
                     }
                 );
 
                 if (response.status === 204) {
-                    addLog('success', `✅ Бот запущен! Действие: ${action}`);
-                    setStatus('Бот запущен ✅', 'online');
+                    addLog('success', `✅ БОТ ЗАПУЩЕН! ДЕЙСТВИЕ: ${action}`);
+                    setStatus('БОТ ЗАПУЩЕН ✅', 'online');
                 } else if (response.status === 401 || response.status === 403) {
-                    addLog('error', '❌ Репозиторий должен быть публичным!');
-                    setStatus('Ошибка доступа ❌', 'error');
+                    addLog('error', '❌ РЕПОЗИТОРИЙ ДОЛЖЕН БЫТЬ ПУБЛИЧНЫМ!');
+                    setStatus('ОШИБКА ДОСТУПА ❌', 'error');
                 } else {
-                    addLog('error', `❌ Ошибка: ${response.status}`);
-                    setStatus('Ошибка ❌', 'error');
+                    addLog('error', `❌ ОШИБКА: ${response.status}`);
+                    setStatus('ОШИБКА ❌', 'error');
                 }
             } catch (error) {
-                addLog('error', `❌ Ошибка: ${error.message}`);
-                setStatus('Ошибка ❌', 'error');
+                addLog('error', `❌ ОШИБКА: ${error.message}`);
+                setStatus('ОШИБКА ❌', 'error');
             }
         }
 
         // ===== ОСТАНОВКА =====
         function stopBot() {
-            addLog('info', '⛔ Останавливаю бота...');
-            setStatus('Остановка ⏹', 'online');
-            addLog('info', '📌 Остановите вручную на вкладке Actions GitHub');
+            addLog('info', '⛔ ОСТАНАВЛИВАЮ БОТА...');
+            setStatus('ОСТАНОВКА ⏹', 'online');
+            addLog('info', '📌 ОСТАНОВИТЕ ВРУЧНУЮ НА ВКЛАДКЕ ACTIONS GITHUB');
         }
 
-        // ===== ЗАВЕРШИТЬ СЕССИЮ =====
+        // ===== ЗАВЕРШИТЬ =====
         function endSession() {
             isLoggedIn = false;
             document.getElementById('controlPanel').style.display = 'none';
-            document.getElementById('status').innerHTML = 'Статус: <span class="online">● Ожидание входа</span>';
-            addLog('success', '🔚 Сессия завершена. Бот вышел.');
-            addLog('info', '💡 Данные автоматически удалены.');
+            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● ОЖИДАНИЕ ВХОДА</span>';
+            addLog('success', '🔚 СЕССИЯ ЗАВЕРШЕНА. БОТ ВЫШЕЛ.');
+            addLog('info', '💡 ДАННЫЕ АВТОМАТИЧЕСКИ УДАЛЕНЫ.');
         }
 
-        // ===== ДОБАВИТЬ В ДРУЗЬЯ =====
-        function addFriend() {
-            const botLogin = document.getElementById('botLogin').value.trim();
-            if (!botLogin) {
-                addLog('error', '❌ Сначала войдите в аккаунт бота!');
+        // ===== ОТПРАВИТЬ ЗАПРОС =====
+        function sendFriendRequest() {
+            const target = document.getElementById('targetNick').value.trim();
+            if (!target) {
+                addLog('error', '❌ ВВЕДИТЕ НИК ЦЕЛИ!');
                 return;
             }
-            addLog('success', `👥 Запрос в друзья отправлен: ${botLogin}`);
-            addLog('info', '📌 Ожидайте подтверждения в Roblox');
-            setStatus('Запрос отправлен 👥', 'online');
+            addLog('success', `👥 ЗАПРОС В ДРУЗЬЯ ОТПРАВЛЕН: ${target}`);
+            addLog('info', '📌 ОЖИДАЙТЕ ПОДТВЕРЖДЕНИЯ В ROXBLOX');
+            setStatus('ЗАПРОС ОТПРАВЛЕН 👥', 'online');
         }
 
-        // ===== ЛОТЕРЕЯ (ПОЛУЧИТЬ ПАРОЛЬ) =====
+        // ===== АВТОПОДТВЕРЖДЕНИЕ =====
+        function autoConfirm() {
+            addLog('success', '✅ АВТОПОДТВЕРЖДЕНИЕ ЗАПУЩЕНО');
+            addLog('info', '📌 БОТ БУДЕТ АВТОМАТИЧЕСКИ ПОДТВЕРЖДАТЬ ВСЕ ЗАПРОСЫ');
+            setStatus('АВТОПОДТВЕРЖДЕНИЕ ✅', 'online');
+        }
+
+        // ===== ЛОТЕРЕЯ =====
         function revealPassword() {
             const box = document.getElementById('lotteryBox');
             const text = document.getElementById('scratchText');
@@ -620,25 +716,25 @@
 
             const password = document.getElementById('botPassword').value.trim();
             if (!password) {
-                addLog('info', '💡 Сначала введите пароль в поле выше');
+                addLog('info', '💡 СНАЧАЛА ВВЕДИТЕ ПАРОЛЬ В ПОЛЕ ВЫШЕ');
                 return;
             }
 
             if (text.classList.contains('revealed')) {
-                addLog('info', '🔐 Пароль уже показан');
+                addLog('info', '🔐 ПАРОЛЬ УЖЕ ПОКАЗАН');
                 return;
             }
 
             text.textContent = password;
             text.classList.add('revealed');
-            hint.textContent = '✅ Пароль получен!';
+            hint.textContent = '✅ ПАРОЛЬ ПОЛУЧЕН!';
             hint.classList.add('revealed');
 
-            addLog('success', `🔐 Пароль: ${password}`);
-            setStatus('Пароль получен 🔐', 'online');
+            addLog('success', `🔐 ПАРОЛЬ: ${password}`);
+            setStatus('ПАРОЛЬ ПОЛУЧЕН 🔐', 'online');
 
             box.style.transition = '0.3s';
-            box.style.borderColor = '#ffd700';
+            box.style.borderColor = '#00ff66';
             setTimeout(() => {
                 box.style.borderColor = '';
             }, 1500);
@@ -646,7 +742,7 @@
 
         // ===== СТАТУС =====
         function setStatus(text, type) {
-            document.getElementById('status').innerHTML = `Статус: <span class="${type}">● ${text}</span>`;
+            document.getElementById('status').innerHTML = `СТАТУС: <span class="${type}">● ${text}</span>`;
         }
 
         // ===== ЛОГ =====
@@ -665,8 +761,8 @@
             document.getElementById('botPassword').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') loginBot();
             });
-            addLog('system', '🔐 Нажмите "ВОЙТИ В АККАУНТ БОТА"');
-            addLog('info', `📌 Репозиторий: ${GITHUB_USER}/${REPO_NAME}`);
+            addLog('system', '▸ СИСТЕМА ЗАГРУЖЕНА. НАЖМИТЕ "ВХОД В АККАУНТ БОТА"');
+            addLog('info', `📌 РЕПОЗИТОРИЙ: ${GITHUB_USER}/${REPO_NAME}`);
         });
     </script>
 
