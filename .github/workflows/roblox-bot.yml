@@ -34,15 +34,15 @@ on:
           - password
           - cookie
       login:
-        description: '👤 Логин (для password)'
+        description: '👤 Логин'
         required: false
         type: string
       password:
-        description: '🔐 Пароль (для password)'
+        description: '🔐 Пароль'
         required: false
         type: string
       roblosecurity:
-        description: '🍪 Cookie (для cookie)'
+        description: '🍪 Cookie'
         required: false
         type: string
 
@@ -51,23 +51,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      
       - name: Setup Wine
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y wine64 wine32 xvfb xdotool scrot
-          pip install pyautogui
-      
+          pip install pyautogui requests
       - name: Run Bot
         env:
-          ROBLOX_TOKEN: ${{ secrets.ROBLOX_TOKEN }}
-          BOT_PASSWORD: ${{ secrets.BOT_PASSWORD }}
           GAME_LINK: ${{ github.event.inputs.game_link }}
           ACTION: ${{ github.event.inputs.action }}
           DURATION: ${{ github.event.inputs.duration }}
