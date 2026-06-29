@@ -63,29 +63,6 @@
             transform: translateX(-50%);
             z-index: 20;
         }
-
-        /* Home Indicator - полоска для выхода */
-        .home-indicator {
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 134px;
-            height: 5px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 3px;
-            z-index: 40;
-            transition: opacity 0.3s;
-            cursor: pointer;
-        }
-        .home-indicator:active {
-            background: rgba(255,255,255,0.8);
-            transform: translateX(-50%) scale(0.9);
-        }
-        .home-indicator.hidden {
-            opacity: 0;
-        }
-
         #homeScreen {
             padding: 50px 12px 20px;
             display: grid;
@@ -142,7 +119,6 @@
             height: 50px;
             border-radius: 12px;
         }
-
         .app-screen {
             position: absolute;
             top: 0;
@@ -184,57 +160,23 @@
             overflow-y: auto;
             padding-bottom: 10px;
         }
-
-        /* Wallpaper Grid */
-        .wallpaper-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .wallpaper-item {
-            aspect-ratio: 9/19;
-            border-radius: 12px;
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 3px;
+            z-index: 40;
+            transition: opacity 0.3s;
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-            background: #2c2c2e;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
         }
-        .wallpaper-item.active {
-            border-color: #007aff;
-            box-shadow: 0 0 20px rgba(0,122,255,0.4);
+        .home-indicator:active {
+            background: rgba(255,255,255,0.8);
+            transform: translateX(-50%) scale(0.9);
         }
-        .wallpaper-item .label {
-            position: absolute;
-            bottom: 6px;
-            font-size: 8px;
-            background: rgba(0,0,0,0.7);
-            padding: 2px 8px;
-            border-radius: 8px;
-            color: #fff;
-            white-space: nowrap;
-        }
-        .wallpaper-item .preview-gradient {
-            width: 100%;
-            height: 100%;
-        }
-        .wallpaper-item .category-badge {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            font-size: 7px;
-            background: rgba(0,0,0,0.7);
-            padding: 1px 6px;
-            border-radius: 8px;
-            color: #8e8e93;
-        }
-
         .toast {
             position: absolute;
             bottom: 100px;
@@ -258,6 +200,193 @@
         @keyframes fadeUp {
             from { opacity: 0; transform: translateX(-50%) translateY(20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* App Store */
+        .app-store-banner {
+            background: linear-gradient(135deg, #007aff, #5856d6);
+            border-radius: 16px;
+            padding: 16px;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .app-store-banner .title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .app-store-banner .sub {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        .app-card {
+            background: #2c2c2e;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            color: #fff;
+        }
+        .app-card .app-icon-big {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+        .app-card .app-info {
+            flex: 1;
+        }
+        .app-card .app-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .app-card .app-desc {
+            font-size: 12px;
+            color: #8e8e93;
+        }
+        .app-card .app-size {
+            font-size: 11px;
+            color: #8e8e93;
+        }
+        .app-card .install-btn {
+            background: #007aff;
+            border: none;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .app-card .install-btn:active {
+            transform: scale(0.9);
+        }
+        .app-card .install-btn.installed {
+            background: #34c759;
+        }
+        .app-card .install-btn.downloading {
+            background: #ff9500;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Shortcuts */
+        .shortcut-section {
+            margin-bottom: 16px;
+        }
+        .shortcut-section .section-title {
+            color: #8e8e93;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 8px 0 4px;
+        }
+        .shortcut-card {
+            background: #2c2c2e;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: background 0.15s;
+        }
+        .shortcut-card:active {
+            background: #3a3a3c;
+        }
+        .shortcut-card .sc-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .shortcut-card .sc-info {
+            flex: 1;
+        }
+        .shortcut-card .sc-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .shortcut-card .sc-desc {
+            font-size: 12px;
+            color: #8e8e93;
+        }
+        .shortcut-card .sc-action {
+            color: #007aff;
+            font-size: 13px;
+        }
+        .shortcut-card .sc-run {
+            background: #007aff;
+            border: none;
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 14px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .shortcut-card .sc-run:active {
+            transform: scale(0.9);
+        }
+
+        .wallpaper-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .wallpaper-item {
+            aspect-ratio: 9/19;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            background: #2c2c2e;
+            position: relative;
+            overflow: hidden;
+        }
+        .wallpaper-item.active {
+            border-color: #007aff;
+            box-shadow: 0 0 20px rgba(0,122,255,0.4);
+        }
+        .wallpaper-item .preview-gradient {
+            width: 100%;
+            height: 100%;
+        }
+        .wallpaper-item .label {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 8px;
+            border-radius: 8px;
+            color: #fff;
+            white-space: nowrap;
+        }
+        .wallpaper-item .category-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 7px;
+            background: rgba(0,0,0,0.7);
+            padding: 1px 6px;
+            border-radius: 8px;
+            color: #8e8e93;
         }
 
         .settings-group {
@@ -435,28 +564,30 @@
             color: #8e8e93;
         }
 
-        .hack-item {
+        .tab-bar {
+            display: flex;
+            gap: 4px;
             background: #2c2c2e;
             border-radius: 12px;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fff;
-            margin-bottom: 8px;
+            padding: 4px;
+            margin-bottom: 12px;
         }
-        .hack-item .install-btn {
-            background: #007aff;
-            border: none;
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
+        .tab-bar .tab {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            color: #8e8e93;
             font-size: 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .hack-item .install-btn.installed {
-            background: #34c759;
+        .tab-bar .tab.active {
+            background: #007aff;
+            color: #fff;
+        }
+        .tab-bar .tab:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -480,28 +611,43 @@
                 <div>↓ 8° ↑ 20°</div>
             </div>
 
+            <div class="app-icon" data-app="appstore"><div class="icon" style="background:#007aff;">📱</div><span class="label">App Store</span></div>
+            <div class="app-icon" data-app="shortcuts"><div class="icon" style="background:#0055ff;">⚡</div><span class="label">Команды</span></div>
             <div class="app-icon" data-app="browser"><div class="icon" style="background:#007aff;">🌐</div><span class="label">Safari</span></div>
             <div class="app-icon" data-app="wallpapers"><div class="icon" style="background:#ff6b6b;">🖼️</div><span class="label">Обои</span></div>
             <div class="app-icon" data-app="terminal"><div class="icon" style="background:#2c2c2e;">⬛</div><span class="label">Терминал</span></div>
-            <div class="app-icon" data-app="hackStore"><div class="icon" style="background:#ff3b30;">🛠️</div><span class="label">Hack Store</span></div>
             <div class="app-icon" data-app="settings"><div class="icon" style="background:#8e8e93;">⚙️</div><span class="label">Настройки</span></div>
             <div class="app-icon" data-app="fieldTest"><div class="icon" style="background:#1a1a2e;">📡</div><span class="label">Field Test</span></div>
             <div class="app-icon" data-app="camera"><div class="icon" style="background:#1a1a2e;">📷</div><span class="label">Камера</span></div>
-            <div class="app-icon" data-app="photos"><div class="icon" style="background:#1a1a2e;">🖼️</div><span class="label">Фото</span></div>
 
             <div class="dock">
+                <div class="app-icon" data-app="appstore"><div class="icon" style="background:#007aff;">📱</div><span class="label">Store</span></div>
+                <div class="app-icon" data-app="shortcuts"><div class="icon" style="background:#0055ff;">⚡</div><span class="label">Команды</span></div>
                 <div class="app-icon" data-app="browser"><div class="icon" style="background:#007aff;">🌐</div><span class="label">Safari</span></div>
-                <div class="app-icon" data-app="wallpapers"><div class="icon" style="background:#ff6b6b;">🖼️</div><span class="label">Обои</span></div>
-                <div class="app-icon" data-app="hackStore"><div class="icon" style="background:#ff3b30;">🛠️</div><span class="label">Hack</span></div>
                 <div class="app-icon" data-app="settings"><div class="icon" style="background:#8e8e93;">⚙️</div><span class="label">Настр.</span></div>
             </div>
         </div>
 
-        <!-- Wallpapers -->
-        <div class="app-screen" id="wallpapers">
-            <div class="app-header"><span class="back" onclick="closeApp('wallpapers')">‹</span><span>🖼️ Обои</span></div>
-            <div class="search-bar"><span>🔍</span><input type="text" id="wallpaperSearch" placeholder="Поиск обоев..." oninput="filterWallpapers()"></div>
-            <div class="app-content" id="wallpaperGrid"></div>
+        <!-- App Store -->
+        <div class="app-screen" id="appstore">
+            <div class="app-header"><span class="back" onclick="closeApp('appstore')">‹</span><span>📱 App Store</span></div>
+            <div class="app-content">
+                <div class="app-store-banner">
+                    <div class="title">🎉 Новые приложения</div>
+                    <div class="sub">Установите лучшие приложения для iOS</div>
+                </div>
+                <div id="appStoreList"></div>
+            </div>
+        </div>
+
+        <!-- Shortcuts -->
+        <div class="app-screen" id="shortcuts">
+            <div class="app-header"><span class="back" onclick="closeApp('shortcuts')">‹</span><span>⚡ Быстрые команды</span></div>
+            <div class="search-bar"><span>🔍</span><input type="text" id="shortcutSearch" placeholder="Поиск команд..." oninput="filterShortcuts()"></div>
+            <div class="app-content" id="shortcutList"></div>
+            <div style="flex-shrink:0; margin-top:8px;">
+                <div style="background:#2c2c2e; border-radius:12px; padding:14px; text-align:center; color:#007aff; font-weight:600; cursor:pointer; border:2px dashed #3a3a3c;" onclick="createShortcut()">+ Создать команду</div>
+            </div>
         </div>
 
         <!-- Browser -->
@@ -511,17 +657,18 @@
             <iframe id="browserFrame" src="https://example.com"></iframe>
         </div>
 
+        <!-- Wallpapers -->
+        <div class="app-screen" id="wallpapers">
+            <div class="app-header"><span class="back" onclick="closeApp('wallpapers')">‹</span><span>🖼️ Обои</span></div>
+            <div class="search-bar"><span>🔍</span><input type="text" id="wallpaperSearch" placeholder="Поиск обоев..." oninput="filterWallpapers()"></div>
+            <div class="app-content" id="wallpaperGrid"></div>
+        </div>
+
         <!-- Terminal -->
         <div class="app-screen" id="terminal">
             <div class="app-header"><span class="back" onclick="closeApp('terminal')">‹</span><span>⬛ Терминал</span></div>
             <div class="output" id="termOutput">$ iOS 26.5.1 Terminal\n$ Введите команду (help)</div>
             <div class="input-line"><input type="text" id="termInput" placeholder="Введите команду..." autofocus><button onclick="runCommand()">⏎</button></div>
-        </div>
-
-        <!-- Hack Store -->
-        <div class="app-screen" id="hackStore">
-            <div class="app-header"><span class="back" onclick="closeApp('hackStore')">‹</span><span>🛠️ Hack Store</span></div>
-            <div class="app-content" id="hackList"></div>
         </div>
 
         <!-- Settings -->
@@ -550,77 +697,254 @@
             </div>
         </div>
 
-        <!-- Photos -->
-        <div class="app-screen" id="photos">
-            <div class="app-header"><span class="back" onclick="closeApp('photos')">‹</span><span>🖼️ Фото</span></div>
-            <div class="app-content" style="color:#fff;">
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:4px;">
-                    <div style="background:#2c2c2e; aspect-ratio:1; border-radius:8px;"></div>
-                    <div style="background:#2c2c2e; aspect-ratio:1; border-radius:8px;"></div>
-                    <div style="background:#2c2c2e; aspect-ratio:1; border-radius:8px;"></div>
-                    <div style="background:#2c2c2e; aspect-ratio:1; border-radius:8px;"></div>
-                    <div style="background:#2c2c2e; aspect-ratio:1; border-radius:8px;"></div>
-                    <div style="background:#2c2c2e; aspect-ratio:1; border-radius:8px;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Home Indicator -->
         <div class="home-indicator" id="homeIndicator" onclick="goHome()"></div>
-
         <div class="toast" id="toast"></div>
     </div>
 </div>
 
 <script>
-    // ===== WALLPAPERS DATA =====
+    // ===== APP STORE =====
+    const appStoreApps = [
+        { id: 'com.apple.pages', name: 'Pages', desc: 'Создавайте документы', icon: '📄', color: '#ff6b6b', size: '212 MB', category: 'Продуктивность' },
+        { id: 'com.apple.numbers', name: 'Numbers', desc: 'Электронные таблицы', icon: '📊', color: '#007aff', size: '189 MB', category: 'Продуктивность' },
+        { id: 'com.apple.keynote', name: 'Keynote', desc: 'Презентации', icon: '🎯', color: '#ff2d55', size: '234 MB', category: 'Продуктивность' },
+        { id: 'com.adobe.ps', name: 'Photoshop Express', desc: 'Редактирование фото', icon: '🎨', color: '#007aff', size: '167 MB', category: 'Фото и видео' },
+        { id: 'com.microsoft.word', name: 'Word', desc: 'Текстовый редактор', icon: '📝', color: '#007aff', size: '456 MB', category: 'Продуктивность' },
+        { id: 'com.microsoft.excel', name: 'Excel', desc: 'Таблицы', icon: '📊', color: '#28a745', size: '423 MB', category: 'Продуктивность' },
+        { id: 'com.google.maps', name: 'Google Maps', desc: 'Навигация', icon: '🗺️', color: '#34c759', size: '189 MB', category: 'Навигация' },
+        { id: 'com.spotify.music', name: 'Spotify', desc: 'Музыкальный стриминг', icon: '🎵', color: '#1ed760', size: '234 MB', category: 'Музыка' },
+        { id: 'com.instagram.app', name: 'Instagram', desc: 'Социальная сеть', icon: '📸', color: '#ff6b6b', size: '312 MB', category: 'Соцсети' },
+        { id: 'com.tiktok.app', name: 'TikTok', desc: 'Короткие видео', icon: '🎬', color: '#000000', size: '345 MB', category: 'Соцсети' },
+        { id: 'com.youtube.app', name: 'YouTube', desc: 'Видеохостинг', icon: '📺', color: '#ff0000', size: '278 MB', category: 'Видео' },
+        { id: 'com.telegram.messenger', name: 'Telegram', desc: 'Мессенджер', icon: '✈️', color: '#0088cc', size: '156 MB', category: 'Соцсети' },
+        { id: 'com.whatsapp.app', name: 'WhatsApp', desc: 'Мессенджер', icon: '💬', color: '#25d366', size: '234 MB', category: 'Соцсети' },
+    ];
+
+    let installedApps = JSON.parse(localStorage.getItem('installedApps') || '[]');
+    let downloadingApps = [];
+
+    function renderAppStore() {
+        const list = document.getElementById('appStoreList');
+        list.innerHTML = '';
+        appStoreApps.forEach(app => {
+            const installed = installedApps.includes(app.id);
+            const downloading = downloadingApps.includes(app.id);
+            const div = document.createElement('div');
+            div.className = 'app-card';
+            div.innerHTML = `
+                <div class="app-icon-big" style="background:${app.color};">${app.icon}</div>
+                <div class="app-info">
+                    <div class="app-name">${app.name}</div>
+                    <div class="app-desc">${app.desc}</div>
+                    <div class="app-size">${app.size} • ${app.category}</div>
+                </div>
+                <button class="install-btn ${installed ? 'installed' : ''} ${downloading ? 'downloading' : ''}" data-id="${app.id}">
+                    ${installed ? '✅ Открыть' : downloading ? '⏳ Загрузка...' : '📥 Установить'}
+                </button>
+            `;
+            list.appendChild(div);
+            const btn = div.querySelector('.install-btn');
+            btn.addEventListener('click', () => {
+                if (installed) {
+                    showToast(`📱 Открываем ${app.name}...`);
+                    return;
+                }
+                if (downloading) return;
+                // Симуляция загрузки IPA
+                downloadingApps.push(app.id);
+                renderAppStore();
+                showToast(`⏳ Загрузка ${app.name}... (${app.size})`);
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 20 + 5;
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        downloadingApps = downloadingApps.filter(id => id !== app.id);
+                        installedApps.push(app.id);
+                        localStorage.setItem('installedApps', JSON.stringify(installedApps));
+                        renderAppStore();
+                        showToast(`✅ ${app.name} установлено! (IPA) 🎉`);
+                        // Создаем иконку на рабочем столе
+                        addAppToHome(app);
+                    } else {
+                        btn.textContent = `⏳ ${Math.round(progress)}%`;
+                    }
+                }, 200);
+            });
+        });
+    }
+
+    function addAppToHome(app) {
+        const home = document.getElementById('homeScreen');
+        const icon = document.createElement('div');
+        icon.className = 'app-icon';
+        icon.dataset.app = 'browser';
+        icon.innerHTML = `
+            <div class="icon" style="background:${app.color};">${app.icon}</div>
+            <span class="label">${app.name}</span>
+        `;
+        icon.addEventListener('click', () => {
+            showToast(`📱 Запуск ${app.name}...`);
+        });
+        // Вставляем перед доком
+        const dock = home.querySelector('.dock');
+        home.insertBefore(icon, dock);
+        showToast(`📱 Иконка "${app.name}" добавлена на рабочий стол`);
+    }
+
+    // ===== SHORTCUTS =====
+    const defaultShortcuts = [
+        { id: 'sc1', name: 'Доброе утро', icon: '🌅', desc: 'Включить свет, погода, музыка', action: 'morning' },
+        { id: 'sc2', name: 'Спокойной ночи', icon: '🌙', desc: 'Выключить свет, режим сна', action: 'night' },
+        { id: 'sc3', name: 'На работу', icon: '💼', desc: 'Открыть календарь, почту, карты', action: 'work' },
+        { id: 'sc4', name: 'Тренировка', icon: '🏋️', desc: 'Запустить тренировку, музыку', action: 'workout' },
+        { id: 'sc5', name: 'Скриншот и поделиться', icon: '📸', desc: 'Сделать скриншот и открыть меню', action: 'screenshot' },
+        { id: 'sc6', name: 'Умный дом', icon: '🏠', desc: 'Управление умным домом', action: 'home' },
+        { id: 'sc7', name: 'Найти iPhone', icon: '📱', desc: 'Поиск устройства', action: 'find' },
+        { id: 'sc8', name: 'Запустить Safari', icon: '🌐', desc: 'Открыть браузер', action: 'safari' },
+    ];
+
+    let shortcuts = JSON.parse(localStorage.getItem('shortcuts') || JSON.stringify(defaultShortcuts));
+
+    function renderShortcuts(filter = '') {
+        const list = document.getElementById('shortcutList');
+        const filtered = shortcuts.filter(s =>
+            s.name.toLowerCase().includes(filter.toLowerCase()) ||
+            s.desc.toLowerCase().includes(filter.toLowerCase())
+        );
+        list.innerHTML = '';
+        // Группировка по категориям
+        const categories = ['Рекомендуемые', 'Автоматизация', 'Мои'];
+        categories.forEach(cat => {
+            const items = filtered.filter(s => s.category === cat || (!s.category && cat === 'Рекомендуемые'));
+            if (items.length === 0 && cat !== 'Рекомендуемые') return;
+            const section = document.createElement('div');
+            section.className = 'shortcut-section';
+            section.innerHTML = `<div class="section-title">${cat}</div>`;
+            items.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'shortcut-card';
+                card.innerHTML = `
+                    <div class="sc-icon" style="background:${s.color || '#007aff'};">${s.icon}</div>
+                    <div class="sc-info">
+                        <div class="sc-name">${s.name}</div>
+                        <div class="sc-desc">${s.desc}</div>
+                    </div>
+                    <button class="sc-run" data-id="${s.id}">▶ Выполнить</button>
+                `;
+                section.appendChild(card);
+                card.querySelector('.sc-run').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    executeShortcut(s);
+                });
+            });
+            list.appendChild(section);
+        });
+    }
+
+    function filterShortcuts() {
+        renderShortcuts(document.getElementById('shortcutSearch').value);
+    }
+
+    function executeShortcut(s) {
+        const actions = {
+            morning: () => {
+                showToast('🌅 Доброе утро! Включаю свет, показываю погоду');
+                document.getElementById('weatherTemp').textContent = '22°';
+                document.getElementById('weatherDesc').textContent = '☀️ Солнечно';
+            },
+            night: () => {
+                showToast('🌙 Спокойной ночи! Выключаю свет, активирую режим сна');
+                document.body.style.background = '#0a0a0a';
+            },
+            work: () => {
+                showToast('💼 Открываю календарь, почту и карты');
+                openApp('browser');
+            },
+            workout: () => {
+                showToast('🏋️ Тренировка начата! 🎵 Музыка включена');
+            },
+            screenshot: () => {
+                showToast('📸 Скриншот сделан! Открываю меню отправки');
+            },
+            home: () => {
+                showToast('🏠 Управление умным домом: свет, климат, безопасность');
+            },
+            find: () => {
+                showToast('📱 Поиск iPhone... Устройство найдено!');
+            },
+            safari: () => {
+                openApp('browser');
+                showToast('🌐 Safari открыт');
+            },
+        };
+        if (actions[s.action]) {
+            actions[s.action]();
+        } else {
+            showToast(`✅ Выполнено: ${s.name}`);
+        }
+    }
+
+    function createShortcut() {
+        const name = prompt('Введите название команды:');
+        if (!name) return;
+        const icon = prompt('Введите иконку (эмодзи):') || '⚡';
+        const desc = prompt('Введите описание:') || 'Моя команда';
+        const action = prompt('Введите действие (morning/night/work/workout/screenshot/home/find/safari):') || 'custom';
+        const newSc = {
+            id: 'sc' + Date.now(),
+            name,
+            icon,
+            desc,
+            action,
+            category: 'Мои',
+            color: '#007aff'
+        };
+        shortcuts.push(newSc);
+        localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+        renderShortcuts();
+        showToast(`✅ Команда "${name}" создана!`);
+    }
+
+    // ===== WALLPAPERS =====
     const wallpaperData = [
-        // Новые iOS 26.5.1 - "Перламутр"
         { id: 'p1', name: 'Розово-золотой', category: 'Новые 26.5.1', type: 'Перламутр', color: 'linear-gradient(135deg, #ff6b9d, #ff9a76, #fad0c4)' },
         { id: 'p2', name: 'Сине-зеленый', category: 'Новые 26.5.1', type: 'Перламутр', color: 'linear-gradient(135deg, #00b4db, #0083b0, #00d2ff)' },
         { id: 'p3', name: 'Фиолетово-серый', category: 'Новые 26.5.1', type: 'Перламутр', color: 'linear-gradient(135deg, #8e44ad, #9b59b6, #a29bfe)' },
         { id: 'p4', name: 'Лавандовый', category: 'Новые 26.5.1', type: 'Перламутр', color: 'linear-gradient(135deg, #d4a5ff, #b8a9c9, #e8d5f5)' },
         { id: 'p5', name: 'Коралловый', category: 'Новые 26.5.1', type: 'Перламутр', color: 'linear-gradient(135deg, #ff6b6b, #ee5a24, #ff9a76)' },
         { id: 'p6', name: 'Янтарный', category: 'Новые 26.5.1', type: 'Перламутр', color: 'linear-gradient(135deg, #f7971e, #ffd200, #f9d423)' },
-        // "Глубины"
         { id: 'd1', name: 'Подводный мир', category: 'Новые 26.5.1', type: 'Глубины', color: 'linear-gradient(135deg, #0c2340, #1a5276, #2e86c1)' },
         { id: 'd2', name: 'Пещеры', category: 'Новые 26.5.1', type: 'Глубины', color: 'linear-gradient(135deg, #1a1a2e, #16213e, #2c3e50)' },
         { id: 'd3', name: 'Звездные туманности', category: 'Новые 26.5.1', type: 'Глубины', color: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)' },
         { id: 'd4', name: 'Млечный путь', category: 'Новые 26.5.1', type: 'Глубины', color: 'linear-gradient(135deg, #000000, #0a0a2e, #1a1a4e)' },
         { id: 'd5', name: 'Туманность Ориона', category: 'Новые 26.5.1', type: 'Глубины', color: 'linear-gradient(135deg, #1a001a, #3d003d, #6a006a)' },
-        // "Геометрия 2.0"
         { id: 'g1', name: 'Круги', category: 'Новые 26.5.1', type: 'Геометрия 2.0', color: 'linear-gradient(135deg, #ff6b6b, #ff9a76, #ffd93d)' },
         { id: 'g2', name: 'Шевроны', category: 'Новые 26.5.1', type: 'Геометрия 2.0', color: 'linear-gradient(135deg, #6c5ce7, #a29bfe, #fd79a8)' },
         { id: 'g3', name: 'Соты', category: 'Новые 26.5.1', type: 'Геометрия 2.0', color: 'linear-gradient(135deg, #00b894, #00cec9, #81ecec)' },
         { id: 'g4', name: 'Волны', category: 'Новые 26.5.1', type: 'Геометрия 2.0', color: 'linear-gradient(135deg, #0984e3, #74b9ff, #dfe6e9)' },
         { id: 'g5', name: 'Спирали', category: 'Новые 26.5.1', type: 'Геометрия 2.0', color: 'linear-gradient(135deg, #6a0572, #ab83a1, #f8e1e8)' },
-        // Градиенты
         { id: 'gr1', name: 'Синий градиент', category: 'Градиенты', type: 'Классика', color: 'linear-gradient(135deg, #007aff, #5856d6, #5ac8fa)' },
         { id: 'gr2', name: 'Красный градиент', category: 'Градиенты', type: 'Классика', color: 'linear-gradient(135deg, #ff3b30, #ff2d55, #ff6b6b)' },
         { id: 'gr3', name: 'Желтый градиент', category: 'Градиенты', type: 'Классика', color: 'linear-gradient(135deg, #ffcc00, #f7c948, #ffd93d)' },
         { id: 'gr4', name: 'Зеленый градиент', category: 'Градиенты', type: 'Классика', color: 'linear-gradient(135deg, #34c759, #28a745, #5ac8fa)' },
         { id: 'gr5', name: 'Фиолетовый градиент', category: 'Градиенты', type: 'Классика', color: 'linear-gradient(135deg, #af52de, #8e44ad, #a29bfe)' },
         { id: 'gr6', name: 'Оранжевый градиент', category: 'Градиенты', type: 'Классика', color: 'linear-gradient(135deg, #ff9500, #f7971e, #ff9a76)' },
-        // Природа
         { id: 'n1', name: 'Горы в тумане', category: 'Природа', type: 'Пейзаж', color: 'linear-gradient(135deg, #2d3436, #636e72, #b2bec3)' },
         { id: 'n2', name: 'Закат над океаном', category: 'Природа', type: 'Пейзаж', color: 'linear-gradient(135deg, #ff6b6b, #ee5a24, #f0932b)' },
         { id: 'n3', name: 'Лес в тумане', category: 'Природа', type: 'Пейзаж', color: 'linear-gradient(135deg, #2d3436, #27ae60, #2ecc71)' },
         { id: 'n4', name: 'Пустыня', category: 'Природа', type: 'Пейзаж', color: 'linear-gradient(135deg, #f7971e, #ffd200, #f9d423)' },
         { id: 'n5', name: 'Северное сияние', category: 'Природа', type: 'Пейзаж', color: 'linear-gradient(135deg, #0c2340, #1a5276, #00d2ff, #2ecc71)' },
         { id: 'n6', name: 'Водопад', category: 'Природа', type: 'Пейзаж', color: 'linear-gradient(135deg, #006994, #00b4db, #81ecec)' },
-        // Города
         { id: 'c1', name: 'Нью-Йорк (ночной)', category: 'Города', type: 'Город', color: 'linear-gradient(135deg, #0c0c0c, #1a1a2e, #2c3e50)' },
         { id: 'c2', name: 'Токио (сакура)', category: 'Города', type: 'Город', color: 'linear-gradient(135deg, #ff6b9d, #ff9a76, #f8e1e8)' },
         { id: 'c3', name: 'Париж (золотой)', category: 'Города', type: 'Город', color: 'linear-gradient(135deg, #f7971e, #ffd200, #f9d423)' },
         { id: 'c4', name: 'Дубай (панорама)', category: 'Города', type: 'Город', color: 'linear-gradient(135deg, #1a5276, #2e86c1, #74b9ff)' },
-        // Космос
         { id: 's1', name: 'Спиральная галактика', category: 'Космос', type: 'Космос', color: 'linear-gradient(135deg, #000000, #0a0a2e, #6a0572)' },
         { id: 's2', name: 'Туманность Ориона', category: 'Космос', type: 'Космос', color: 'linear-gradient(135deg, #0c0c0c, #1a001a, #3d003d)' },
-        // AOD
         { id: 'a1', name: 'Минимал (AOD)', category: 'Always-On', type: 'AOD', color: 'linear-gradient(135deg, #000000, #111111, #1a1a1a)' },
         { id: 'a2', name: 'Контур (AOD)', category: 'Always-On', type: 'AOD', color: 'linear-gradient(135deg, #1a1a1a, #2c2c2e, #3a3a3c)' },
         { id: 'a3', name: 'Моно (AOD)', category: 'Always-On', type: 'AOD', color: 'linear-gradient(135deg, #222222, #333333, #444444)' },
-        // Живые (имитация)
         { id: 'l1', name: 'Погода (Live)', category: 'Живые обои', type: 'Live', color: 'linear-gradient(135deg, #007aff, #5856d6, #5ac8fa)' },
         { id: 'l2', name: 'Часы (Live)', category: 'Живые обои', type: 'Live', color: 'linear-gradient(135deg, #1a1a2e, #2c3e50, #4a4a6a)' },
         { id: 'l3', name: 'Космос (Live)', category: 'Живые обои', type: 'Live', color: 'linear-gradient(135deg, #000000, #0a0a2e, #6a0572)' },
@@ -678,24 +1002,17 @@
         }
     }
 
-    // Свайп вверх для выхода
     let touchStartY = 0;
-    let touchStartX = 0;
     document.getElementById('screen').addEventListener('touchstart', (e) => {
         touchStartY = e.touches[0].clientY;
-        touchStartX = e.touches[0].clientX;
     });
-
     document.getElementById('screen').addEventListener('touchmove', (e) => {
         const deltaY = e.touches[0].clientY - touchStartY;
-        const deltaX = e.touches[0].clientX - touchStartX;
-        // Свайп вверх от низа экрана
-        if (touchStartY > 700 && deltaY < -50 && Math.abs(deltaX) < 50) {
+        if (touchStartY > 700 && deltaY < -50) {
             goHome();
             touchStartY = 0;
         }
-        // Свайп вниз для закрытия
-        if (deltaY > 80 && Math.abs(deltaX) < 50) {
+        if (deltaY > 80) {
             const active = document.querySelector('.app-screen.active');
             if (active) {
                 active.classList.remove('active');
@@ -771,9 +1088,10 @@
             case 'whoami': return 'mobile';
             case 'pwd': return '/var/mobile';
             case 'clear': termOutput.textContent = '$ iOS 26.5.1 Terminal'; return '';
-            case 'help': return 'Команды: ls, echo, date, whoami, pwd, clear, help, uname, wallpaper';
+            case 'help': return 'Команды: ls, echo, date, whoami, pwd, clear, help, uname, wallpaper, apps';
             case 'uname': return 'iOS 26.5.1 Darwin 21.0.0';
             case 'wallpaper': return `Текущие обои: ${wallpaperData.find(w => w.id === selectedWallpaper)?.name || 'Не выбраны'}`;
+            case 'apps': return `Установлено приложений: ${installedApps.length}`;
             default: return `Команда не найдена: ${command}. Введите help`;
         }
     }
@@ -788,48 +1106,6 @@
         document.getElementById('browserFrame').src = url;
     }
     document.getElementById('urlInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') loadUrl(); });
-
-    // ===== HACK STORE =====
-    const hackApps = [
-        { id: 'app1', name: 'iExplorer Pro', desc: 'Файловый менеджер', version: '2.3.1' },
-        { id: 'app2', name: 'GameBoost+', desc: 'Ускоритель игр', version: '1.7.0' },
-        { id: 'app3', name: 'AdBlock Ultimate', desc: 'Блокировка рекламы', version: '4.2.5' },
-        { id: 'app4', name: 'Tweaks Manager', desc: 'Управление твиками', version: '3.0.1' },
-    ];
-    let installedApps = JSON.parse(localStorage.getItem('installedApps') || '[]');
-
-    function renderHackStore() {
-        const list = document.getElementById('hackList');
-        list.innerHTML = '';
-        hackApps.forEach(app => {
-            const installed = installedApps.includes(app.id);
-            const item = document.createElement('div');
-            item.className = 'hack-item';
-            item.innerHTML = `
-                <div>
-                    <div style="font-weight:600; color:#fff;">${app.name}</div>
-                    <div style="font-size:12px; color:#8e8e93;">${app.desc} • v${app.version}</div>
-                </div>
-                <button class="install-btn ${installed ? 'installed' : ''}" data-id="${app.id}">
-                    ${installed ? '✅ Установлено' : '📥 Установить'}
-                </button>
-            `;
-            list.appendChild(item);
-            item.querySelector('.install-btn').addEventListener('click', () => {
-                if (installedApps.includes(app.id)) {
-                    showToast(`⚠️ ${app.name} уже установлено`);
-                    return;
-                }
-                showToast(`⏳ Установка ${app.name}...`);
-                setTimeout(() => {
-                    installedApps.push(app.id);
-                    localStorage.setItem('installedApps', JSON.stringify(installedApps));
-                    renderHackStore();
-                    showToast(`✅ ${app.name} установлено!`);
-                }, 1200);
-            });
-        });
-    }
 
     // ===== FIELD TEST =====
     function renderFieldTest() {
@@ -873,7 +1149,8 @@
             if (appId === 'settings') renderSettings();
             if (appId === 'fieldTest') renderFieldTest();
             if (appId === 'wallpapers') renderWallpapers();
-            if (appId === 'hackStore') renderHackStore();
+            if (appId === 'appstore') renderAppStore();
+            if (appId === 'shortcuts') renderShortcuts();
         }
     }
 
@@ -898,13 +1175,15 @@
     if (savedWallpaper) applyWallpaper(savedWallpaper);
     renderWallpapers();
     renderSettings();
-    renderHackStore();
+    renderAppStore();
+    renderShortcuts();
     renderFieldTest();
 
     console.log('✅ iOS 26.5.1 Simulator Pro загружен!');
-    console.log(`🖼️ Текущие обои: ${savedWallpaper?.name || 'Не выбраны'}`);
-    console.log(`📱 Всего обоев: ${wallpaperData.length}`);
-    console.log('🏠 Home Indicator активен - свайп вверх или тап для выхода');
+    console.log(`📱 Приложений в App Store: ${appStoreApps.length}`);
+    console.log(`⚡ Быстрых команд: ${shortcuts.length}`);
+    console.log(`🖼️ Обоев: ${wallpaperData.length}`);
+    console.log('🏠 Home Indicator активен - свайп вверх для выхода');
 </script>
 
 </body>
