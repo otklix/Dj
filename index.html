@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>iOS Simulator + Hack Store</title>
+    <title>iOS Simulator</title>
     <style>
         * {
             margin: 0;
@@ -62,14 +62,13 @@
             transform: translateX(-50%);
             z-index: 20;
         }
-
-        /* Домашний экран */
         #homeScreen {
             padding: 50px 16px 20px;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px 8px;
+            gap: 12px 6px;
             height: 100%;
+            overflow-y: auto;
         }
         .app-icon {
             display: flex;
@@ -94,32 +93,29 @@
         }
         .app-icon .label {
             color: #fff;
-            font-size: 11px;
-            margin-top: 6px;
+            font-size: 10px;
+            margin-top: 4px;
             text-align: center;
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
-
         .dock {
             position: absolute;
-            bottom: 20px;
+            bottom: 12px;
             left: 16px;
             right: 16px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(20px);
             border-radius: 28px;
-            padding: 12px 20px;
+            padding: 10px 16px;
             display: flex;
             justify-content: space-around;
             z-index: 5;
         }
         .dock .app-icon .icon {
-            width: 54px;
-            height: 54px;
+            width: 50px;
+            height: 50px;
             border-radius: 12px;
         }
-
-        /* Приложения (экраны) */
         .app-screen {
             position: absolute;
             top: 0;
@@ -148,7 +144,7 @@
             margin-bottom: 12px;
         }
         .app-header .back {
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
             padding: 4px 8px;
         }
@@ -272,6 +268,101 @@
         .hack-item .installed {
             background: #34c759;
         }
+
+        /* Быстрые команды */
+        #shortcuts .search-bar {
+            background: #2c2c2e;
+            border-radius: 10px;
+            padding: 8px 14px;
+            margin-bottom: 16px;
+            color: #8e8e93;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #shortcuts .search-bar input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+        }
+        #shortcuts .search-bar input::placeholder {
+            color: #8e8e93;
+        }
+        .shortcut-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .shortcut-item {
+            background: #2c2c2e;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .shortcut-item:active {
+            background: #3a3a3c;
+        }
+        .shortcut-item .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .shortcut-item .icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #007aff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #fff;
+        }
+        .shortcut-item .name {
+            font-size: 15px;
+        }
+        .shortcut-item .badge {
+            font-size: 12px;
+            color: #8e8e93;
+        }
+        .shortcut-item .action-btn {
+            background: #007aff;
+            border: none;
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 14px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .shortcut-item .action-btn:active {
+            opacity: 0.6;
+        }
+
+        .new-command {
+            background: #2c2c2e;
+            border-radius: 12px;
+            padding: 14px;
+            color: #007aff;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 8px;
+            cursor: pointer;
+            border: 2px dashed #3a3a3c;
+        }
+        .new-command:active {
+            opacity: 0.6;
+        }
+
         .toast {
             position: absolute;
             bottom: 100px;
@@ -285,6 +376,8 @@
             z-index: 50;
             display: none;
             backdrop-filter: blur(10px);
+            text-align: center;
+            max-width: 85%;
         }
         .toast.show {
             display: block;
@@ -300,6 +393,32 @@
                 transform: translateX(-50%) translateY(0);
             }
         }
+
+        /* Погода на главном экране */
+        .weather-widget {
+            grid-column: span 4;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .weather-widget .temp {
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .weather-widget .desc {
+            font-size: 14px;
+            color: #8e8e93;
+        }
+        .weather-widget .range {
+            font-size: 14px;
+            color: #8e8e93;
+        }
     </style>
 </head>
 <body>
@@ -308,16 +427,29 @@
         <div class="screen" id="screen">
             <div class="notch"></div>
             <div class="status-bar">
-                <span>9:41</span>
+                <span>12:54</span>
                 <span>📶 🔋 100%</span>
             </div>
 
             <!-- Домашний экран -->
             <div id="homeScreen">
+                <!-- Погода -->
+                <div class="weather-widget">
+                    <div>
+                        <div class="temp">20°</div>
+                        <div class="desc">В основном облачно</div>
+                    </div>
+                    <div class="range">↓ 8° ↑ 20°</div>
+                </div>
+
                 <!-- Иконки -->
                 <div class="app-icon" data-app="browser">
                     <div class="icon" style="background:#007aff;">🌐</div>
-                    <span class="label">Браузер</span>
+                    <span class="label">Safari</span>
+                </div>
+                <div class="app-icon" data-app="shortcuts">
+                    <div class="icon" style="background:#0055ff;">⚡</div>
+                    <span class="label">Команды</span>
                 </div>
                 <div class="app-icon" data-app="terminal">
                     <div class="icon" style="background:#2c2c2e;">⬛</div>
@@ -337,9 +469,9 @@
                         <div class="icon" style="background:#007aff;">🌐</div>
                         <span class="label">Safari</span>
                     </div>
-                    <div class="app-icon" data-app="terminal">
-                        <div class="icon" style="background:#2c2c2e;">⬛</div>
-                        <span class="label">Terminal</span>
+                    <div class="app-icon" data-app="shortcuts">
+                        <div class="icon" style="background:#0055ff;">⚡</div>
+                        <span class="label">Команды</span>
                     </div>
                     <div class="app-icon" data-app="hackStore">
                         <div class="icon" style="background:#ff3b30;">🛠️</div>
@@ -380,12 +512,24 @@
                     <span class="back" onclick="closeApp('hackStore')">‹</span>
                     <span>🛠️ Hack Store</span>
                 </div>
-                <div class="app-list" id="hackList">
-                    <!-- Список IPA будет здесь -->
-                </div>
+                <div class="app-list" id="hackList"></div>
             </div>
 
-            <!-- Настройки (заглушка) -->
+            <!-- Быстрые команды -->
+            <div class="app-screen" id="shortcuts">
+                <div class="app-header">
+                    <span class="back" onclick="closeApp('shortcuts')">‹</span>
+                    <span>⚡ Все быстрые команды</span>
+                </div>
+                <div class="search-bar">
+                    <span>🔍</span>
+                    <input type="text" id="shortcutSearch" placeholder="Поиск" oninput="filterShortcuts()">
+                </div>
+                <div class="shortcut-grid" id="shortcutGrid"></div>
+                <div class="new-command" onclick="addShortcut()">+ Новая команда</div>
+            </div>
+
+            <!-- Настройки -->
             <div class="app-screen" id="settings">
                 <div class="app-header">
                     <span class="back" onclick="closeApp('settings')">‹</span>
@@ -397,13 +541,98 @@
                 </div>
             </div>
 
-            <!-- Toast -->
             <div class="toast" id="toast"></div>
         </div>
     </div>
 
     <script>
-        // === СПИСОК ПРИЛОЖЕНИЙ ДЛЯ HACK STORE ===
+        // === БЫСТРЫЕ КОМАНДЫ ===
+        const defaultShortcuts = [
+            { id: 's1', name: 'Выбрать из меню', icon: '📋', action: 'showMenu' },
+            { id: 's2', name: 'Разборки', icon: '⚔️', action: 'argue' },
+            { id: 's3', name: 'Показать контент', icon: '📄', action: 'showContent' },
+            { id: 's4', name: 'Запустить быструю команду', icon: '▶️', action: 'runQuick' },
+            { id: 's5', name: 'Произнести hackmax', icon: '🎤', action: 'speakHackmax' },
+            { id: 's6', name: 'Создать архив', icon: '📦', action: 'createArchive' },
+            { id: 's7', name: 'brawl stars', icon: '⭐', action: 'brawlStars' },
+            { id: 's8', name: 'Открыть файл', icon: '📁', action: 'openFile' },
+        ];
+
+        let shortcuts = JSON.parse(localStorage.getItem('shortcuts') || JSON.stringify(defaultShortcuts));
+
+        function renderShortcuts(filter = '') {
+            const grid = document.getElementById('shortcutGrid');
+            const filtered = shortcuts.filter(s =>
+                s.name.toLowerCase().includes(filter.toLowerCase())
+            );
+            grid.innerHTML = '';
+            filtered.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'shortcut-item';
+                div.innerHTML = `
+                    <div class="left">
+                        <div class="icon-circle" style="background:#007aff;">${s.icon || '⚡'}</div>
+                        <span class="name">${s.name}</span>
+                    </div>
+                    <button class="action-btn" data-id="${s.id}">Выбрать</button>
+                `;
+                grid.appendChild(div);
+                div.querySelector('.action-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    executeShortcut(s);
+                });
+            });
+        }
+
+        function filterShortcuts() {
+            const query = document.getElementById('shortcutSearch').value;
+            renderShortcuts(query);
+        }
+
+        function executeShortcut(s) {
+            const actions = {
+                showMenu: () => showToast('📋 Открыто меню выбора'),
+                argue: () => showToast('⚔️ Разборки начались!'),
+                showContent: () => showToast('📄 Показываю контент...'),
+                runQuick: () => showToast('▶️ Быстрая команда запущена!'),
+                speakHackmax: () => {
+                    const msg = new SpeechSynthesisUtterance('hackmax');
+                    msg.lang = 'ru-RU';
+                    speechSynthesis.speak(msg);
+                    showToast('🎤 Произнесено: hackmax');
+                },
+                createArchive: () => showToast('📦 Архив создан!'),
+                brawlStars: () => {
+                    window.open('https://brawlstars.com', '_blank');
+                    showToast('⭐ Запускаем Brawl Stars...');
+                },
+                openFile: () => showToast('📁 Файл открыт'),
+            };
+            if (actions[s.action]) {
+                actions[s.action]();
+            } else {
+                showToast(`✅ Выполнено: ${s.name}`);
+            }
+        }
+
+        function addShortcut() {
+            const name = prompt('Введите название команды:');
+            if (!name) return;
+            const icon = prompt('Введите иконку (эмодзи):') || '⚡';
+            const action = prompt('Введите действие (любое слово):') || 'custom';
+            const newShortcut = {
+                id: 's' + Date.now(),
+                name: name,
+                icon: icon,
+                action: action
+            };
+            shortcuts.push(newShortcut);
+            localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+            renderShortcuts();
+            showToast(`✅ Добавлена команда: ${name}`);
+        }
+
+        // === HACK STORE ===
         const hackApps = [
             { id: 'app1', name: 'iExplorer Pro', desc: 'Файловый менеджер', version: '2.3.1' },
             { id: 'app2', name: 'GameBoost+', desc: 'Ускоритель игр', version: '1.7.0' },
@@ -413,36 +642,38 @@
 
         let installedApps = JSON.parse(localStorage.getItem('installedApps') || '[]');
 
-        // === ОТКРЫТИЕ/ЗАКРЫТИЕ ПРИЛОЖЕНИЙ ===
-        function openApp(appId) {
-            document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(appId);
-            if (target) {
-                target.classList.add('active');
-                if (appId === 'terminal') {
-                    document.getElementById('termInput').focus();
-                }
-                if (appId === 'hackStore') {
-                    renderHackStore();
-                }
-            }
-        }
-
-        function closeApp(appId) {
-            document.getElementById(appId).classList.remove('active');
-        }
-
-        document.querySelectorAll('.app-icon[data-app]').forEach(el => {
-            el.addEventListener('click', () => {
-                const appId = el.dataset.app;
-                if (appId === 'settings') {
-                    // Настройки просто открываем
-                    openApp('settings');
-                    return;
-                }
-                openApp(appId);
+        function renderHackStore() {
+            const list = document.getElementById('hackList');
+            list.innerHTML = '';
+            hackApps.forEach(app => {
+                const installed = installedApps.includes(app.id);
+                const item = document.createElement('div');
+                item.className = 'hack-item';
+                item.innerHTML = `
+                    <div class="info">
+                        <span class="name">${app.name}</span>
+                        <span class="desc">${app.desc} • v${app.version}</span>
+                    </div>
+                    <button class="install-btn ${installed ? 'installed' : ''}" data-id="${app.id}">
+                        ${installed ? '✅ Установлено' : '📥 Установить'}
+                    </button>
+                `;
+                list.appendChild(item);
+                item.querySelector('.install-btn').addEventListener('click', () => {
+                    if (installedApps.includes(app.id)) {
+                        showToast(`⚠️ ${app.name} уже установлено`);
+                        return;
+                    }
+                    showToast(`⏳ Установка ${app.name}...`);
+                    setTimeout(() => {
+                        installedApps.push(app.id);
+                        localStorage.setItem('installedApps', JSON.stringify(installedApps));
+                        renderHackStore();
+                        showToast(`✅ ${app.name} установлено!`);
+                    }, 1200);
+                });
             });
-        });
+        }
 
         // === БРАУЗЕР ===
         function loadUrl() {
@@ -464,8 +695,7 @@
             const cmd = termInput.value.trim();
             if (!cmd) return;
             termOutput.textContent += `\n$ ${cmd}`;
-            const result = executeCommand(cmd);
-            termOutput.textContent += `\n${result}`;
+            termOutput.textContent += `\n${executeCommand(cmd)}`;
             termInput.value = '';
             termOutput.scrollTop = termOutput.scrollHeight;
         }
@@ -474,7 +704,6 @@
             const parts = cmd.split(' ');
             const command = parts[0].toLowerCase();
             const args = parts.slice(1);
-
             switch (command) {
                 case 'ls':
                     return 'Documents  Downloads  Music  Photos  Apps';
@@ -497,47 +726,38 @@
                     return `Команда не найдена: ${command}. Введите help`;
             }
         }
-
         termInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') runCommand();
         });
 
-        // === HACK STORE ===
-        function renderHackStore() {
-            const list = document.getElementById('hackList');
-            list.innerHTML = '';
-            hackApps.forEach(app => {
-                const installed = installedApps.includes(app.id);
-                const item = document.createElement('div');
-                item.className = 'hack-item';
-                item.innerHTML = `
-                    <div class="info">
-                        <span class="name">${app.name}</span>
-                        <span class="desc">${app.desc} • v${app.version}</span>
-                    </div>
-                    <button class="install-btn ${installed ? 'installed' : ''}" data-id="${app.id}">
-                        ${installed ? '✅ Установлено' : '📥 Установить'}
-                    </button>
-                `;
-                list.appendChild(item);
-
-                const btn = item.querySelector('.install-btn');
-                btn.addEventListener('click', () => {
-                    if (installedApps.includes(app.id)) {
-                        showToast(`⚠️ ${app.name} уже установлено`);
-                        return;
-                    }
-                    // Имитация установки IPA
-                    showToast(`⏳ Установка ${app.name}...`);
-                    setTimeout(() => {
-                        installedApps.push(app.id);
-                        localStorage.setItem('installedApps', JSON.stringify(installedApps));
-                        renderHackStore();
-                        showToast(`✅ ${app.name} успешно установлено!`);
-                    }, 1200);
-                });
-            });
+        // === ОТКРЫТИЕ/ЗАКРЫТИЕ ===
+        function openApp(appId) {
+            document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(appId);
+            if (target) {
+                target.classList.add('active');
+                if (appId === 'terminal') {
+                    document.getElementById('termInput').focus();
+                }
+                if (appId === 'shortcuts') {
+                    renderShortcuts();
+                    document.getElementById('shortcutSearch').value = '';
+                }
+                if (appId === 'hackStore') {
+                    renderHackStore();
+                }
+            }
         }
+
+        function closeApp(appId) {
+            document.getElementById(appId).classList.remove('active');
+        }
+
+        document.querySelectorAll('.app-icon[data-app]').forEach(el => {
+            el.addEventListener('click', () => {
+                openApp(el.dataset.app);
+            });
+        });
 
         // === TOAST ===
         function showToast(text) {
@@ -550,10 +770,7 @@
             }, 2200);
         }
 
-        // === ИНИЦИАЛИЗАЦИЯ ===
-        renderHackStore();
-
-        // Свайп вниз для закрытия приложений (на касание)
+        // === СВАЙП ===
         let startY = 0;
         document.getElementById('screen').addEventListener('touchstart', (e) => {
             startY = e.touches[0].clientY;
@@ -569,8 +786,10 @@
             }
         });
 
-        console.log('✅ iOS Simulator с Hack Store запущен!');
-        console.log('📦 Установленные приложения:', installedApps);
+        // === ИНИЦИАЛИЗАЦИЯ ===
+        renderShortcuts();
+        renderHackStore();
+        console.log('✅ iOS Simulator с быстрыми командами запущен!');
     </script>
 
 </body>
