@@ -1,351 +1,576 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🤖 Roblox Bot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>iOS Simulator + Hack Store</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
-            min-height: 100vh;
-            background: #0a0a0a;
+            background: #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 16px;
+            min-height: 100vh;
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
         }
-        .container {
-            max-width: 420px;
+        .iphone {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 44px;
+            padding: 12px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+        .screen {
             width: 100%;
-            background: #111;
-            border: 1px solid #2a2a2a;
-            border-radius: 20px;
-            padding: 20px 16px;
+            height: 100%;
+            background: #1c1c1e;
+            border-radius: 36px;
+            overflow: hidden;
+            position: relative;
         }
-        h1 {
-            font-size: 1.5rem;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 2px;
-        }
-        .sub {
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.08);
-            text-align: center;
-            letter-spacing: 2px;
-            margin-bottom: 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-            padding-bottom: 6px;
-        }
-        .input-group {
-            margin-bottom: 8px;
-        }
-        label {
-            display: block;
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.15);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 0.8rem;
-            outline: none;
-        }
-        input:focus {
-            border-color: rgba(255,255,255,0.15);
-        }
-        .btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-        }
-        .btn-primary {
-            background: #ffffff;
-            color: #0a0a0a;
-        }
-        .btn-primary:hover {
-            background: #eee;
-        }
-        .btn-success {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #fff;
-        }
-        .btn-success:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        .btn-danger {
-            background: rgba(255,50,50,0.06);
-            border: 1px solid rgba(255,50,50,0.08);
-            color: #ff5555;
-        }
-        .btn-group {
+        .status-bar {
             display: flex;
-            gap: 6px;
-            margin-top: 4px;
+            justify-content: space-between;
+            padding: 12px 24px 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
         }
-        .btn-group .btn {
-            flex: 1;
-            margin-top: 0;
+        .notch {
+            width: 150px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 18px 18px;
+            margin: 0 auto;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
         }
-        .status {
+
+        /* Домашний экран */
+        #homeScreen {
+            padding: 50px 16px 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px 8px;
+            height: 100%;
+        }
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .app-icon:active {
+            transform: scale(0.85);
+        }
+        .app-icon .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .app-icon .label {
+            color: #fff;
+            font-size: 11px;
+            margin-top: 6px;
             text-align: center;
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.06);
-            margin: 8px 0 4px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
-        .status .online { color: #fff; }
-        .status .error { color: #ff4444; }
-        .status .loading { color: #ffaa00; }
-        .log {
-            background: rgba(0,0,0,0.4);
-            border-radius: 6px;
+
+        .dock {
+            position: absolute;
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 5;
+        }
+        .dock .app-icon .icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+        }
+
+        /* Приложения (экраны) */
+        .app-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1c1c1e;
+            border-radius: 36px;
+            padding: 50px 16px 20px;
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+        }
+        .app-screen.active {
+            display: flex;
+        }
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 12px;
+        }
+        .app-header .back {
+            font-size: 24px;
+            cursor: pointer;
             padding: 4px 8px;
-            max-height: 50px;
+        }
+        .app-header .back:active {
+            opacity: 0.5;
+        }
+
+        /* Браузер */
+        #browser iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            border-radius: 10px;
+            background: #fff;
+        }
+        #browser .url-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        #browser .url-bar input {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            background: #2c2c2e;
+            color: #fff;
+            font-size: 14px;
+        }
+        #browser .url-bar button {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            background: #007aff;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Терминал */
+        #terminal .output {
+            flex: 1;
+            background: #0d0d0d;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            padding: 12px;
+            border-radius: 10px;
             overflow-y: auto;
-            font-size: 0.45rem;
-            color: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.01);
-            margin-top: 4px;
+            white-space: pre-wrap;
+            margin-bottom: 8px;
+            min-height: 200px;
+            max-height: 400px;
         }
-        .log-entry {
-            padding: 1px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.003);
+        #terminal .input-line {
+            display: flex;
+            gap: 8px;
         }
-        .log-entry .time {
-            color: rgba(255,255,255,0.02);
-            margin-right: 4px;
+        #terminal .input-line input {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            background: #2c2c2e;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
         }
-        .log-entry.success { color: #fff; }
-        .log-entry.error { color: #ff4444; }
-        .log-entry.info { color: rgba(255,255,255,0.15); }
-        .log-entry.system { color: rgba(255,255,255,0.2); }
-        .footer {
-            text-align: center;
-            font-size: 0.3rem;
-            color: rgba(255,255,255,0.01);
-            margin-top: 10px;
-            padding-top: 6px;
-            border-top: 1px solid rgba(255,255,255,0.003);
+        #terminal .input-line button {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            background: #007aff;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Hack Store */
+        #hackStore .app-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .hack-item {
+            background: #2c2c2e;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+        .hack-item .info {
+            display: flex;
+            flex-direction: column;
+        }
+        .hack-item .name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .hack-item .desc {
+            font-size: 12px;
+            color: #8e8e93;
+        }
+        .hack-item .install-btn {
+            background: #007aff;
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .hack-item .install-btn:active {
+            opacity: 0.6;
+        }
+        .hack-item .installed {
+            background: #34c759;
+        }
+        .toast {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 50;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        .toast.show {
+            display: block;
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-
-        <h1>🤖 BOT</h1>
-        <div class="sub">▸ УПРАВЛЕНИЕ БОТОМ</div>
-
-        <!-- ===== ВХОД ===== -->
-        <button class="btn btn-primary" onclick="toggleLogin()">
-            🔑 ВХОД В АККАУНТ
-        </button>
-
-        <div id="loginPanel" style="display:none; margin-top:10px;">
-            <div class="input-group">
-                <label>👤 ЛОГИН</label>
-                <input type="text" id="botLogin" placeholder="Введите логин..." />
+    <div class="iphone">
+        <div class="screen" id="screen">
+            <div class="notch"></div>
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋 100%</span>
             </div>
-            <div class="input-group">
-                <label>🔐 ПАРОЛЬ</label>
-                <input type="password" id="botPassword" placeholder="Введите пароль..." />
+
+            <!-- Домашний экран -->
+            <div id="homeScreen">
+                <!-- Иконки -->
+                <div class="app-icon" data-app="browser">
+                    <div class="icon" style="background:#007aff;">🌐</div>
+                    <span class="label">Браузер</span>
+                </div>
+                <div class="app-icon" data-app="terminal">
+                    <div class="icon" style="background:#2c2c2e;">⬛</div>
+                    <span class="label">Терминал</span>
+                </div>
+                <div class="app-icon" data-app="hackStore">
+                    <div class="icon" style="background:#ff3b30;">🛠️</div>
+                    <span class="label">Hack Store</span>
+                </div>
+                <div class="app-icon" data-app="settings">
+                    <div class="icon" style="background:#8e8e93;">⚙️</div>
+                    <span class="label">Настройки</span>
+                </div>
+
+                <div class="dock">
+                    <div class="app-icon" data-app="browser">
+                        <div class="icon" style="background:#007aff;">🌐</div>
+                        <span class="label">Safari</span>
+                    </div>
+                    <div class="app-icon" data-app="terminal">
+                        <div class="icon" style="background:#2c2c2e;">⬛</div>
+                        <span class="label">Terminal</span>
+                    </div>
+                    <div class="app-icon" data-app="hackStore">
+                        <div class="icon" style="background:#ff3b30;">🛠️</div>
+                        <span class="label">Hack</span>
+                    </div>
+                </div>
             </div>
-            <button class="btn btn-success" onclick="loginLocal()">✅ ВОЙТИ</button>
+
+            <!-- Браузер -->
+            <div class="app-screen" id="browser">
+                <div class="app-header">
+                    <span class="back" onclick="closeApp('browser')">‹</span>
+                    <span>Браузер</span>
+                </div>
+                <div class="url-bar">
+                    <input type="text" id="urlInput" placeholder="Введите URL..." value="https://example.com">
+                    <button onclick="loadUrl()">Перейти</button>
+                </div>
+                <iframe id="browserFrame" src="https://example.com"></iframe>
+            </div>
+
+            <!-- Терминал -->
+            <div class="app-screen" id="terminal">
+                <div class="app-header">
+                    <span class="back" onclick="closeApp('terminal')">‹</span>
+                    <span>Терминал</span>
+                </div>
+                <div class="output" id="termOutput">$ Добро пожаловать в терминал iOS\n$ Введите команду...</div>
+                <div class="input-line">
+                    <input type="text" id="termInput" placeholder="Введите команду..." autofocus>
+                    <button onclick="runCommand()">⏎</button>
+                </div>
+            </div>
+
+            <!-- Hack Store -->
+            <div class="app-screen" id="hackStore">
+                <div class="app-header">
+                    <span class="back" onclick="closeApp('hackStore')">‹</span>
+                    <span>🛠️ Hack Store</span>
+                </div>
+                <div class="app-list" id="hackList">
+                    <!-- Список IPA будет здесь -->
+                </div>
+            </div>
+
+            <!-- Настройки (заглушка) -->
+            <div class="app-screen" id="settings">
+                <div class="app-header">
+                    <span class="back" onclick="closeApp('settings')">‹</span>
+                    <span>Настройки</span>
+                </div>
+                <div style="color:#fff; padding:20px; text-align:center;">
+                    <p>📱 iOS 15.4</p>
+                    <p style="font-size:13px; color:#8e8e93; margin-top:10px;">Симулятор интерфейса</p>
+                </div>
+            </div>
+
+            <!-- Toast -->
+            <div class="toast" id="toast"></div>
         </div>
-
-        <!-- ===== ПАНЕЛЬ УПРАВЛЕНИЯ ===== -->
-        <div id="controlPanel" style="display:none; margin-top:10px;">
-
-            <div class="input-group">
-                <label>🔗 ССЫЛКА НА СЕРВЕР</label>
-                <input type="text" id="gameLink" value="https://www.roblox.com/games/123456789/Private-Server" />
-            </div>
-
-            <div class="input-group">
-                <label>🎯 ДЕЙСТВИЕ</label>
-                <select id="botAction">
-                    <option value="stand_and_wait">🧍 СТОЯТЬ И ЖДАТЬ</option>
-                    <option value="walk_to_player">🚶 ПОДОЙТИ К ИГРОКУ</option>
-                    <option value="take_item">📦 ЗАБРАТЬ ПРЕДМЕТ</option>
-                    <option value="leave_game">🚪 ВЫЙТИ</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>👤 КОМУ ОТПРАВИТЬ ЗАПРОС</label>
-                <input type="text" id="targetNick" placeholder="Введите ник..." value="ВашНик" />
-            </div>
-
-            <button class="btn btn-primary" onclick="executeBot()">🚀 ЗАПУСТИТЬ БОТА</button>
-
-            <div class="btn-group">
-                <button class="btn btn-danger" onclick="stopBot()">⛔ СТОП</button>
-                <button class="btn btn-success" onclick="endSession()">🔚 ЗАВЕРШИТЬ</button>
-            </div>
-
-            <div class="status" id="status">
-                СТАТУС: <span class="online">● БОТ ГОТОВ</span>
-            </div>
-
-            <div class="log" id="logContainer">
-                <div class="log-entry system"><span class="time">[00:00]</span> ▸ СИСТЕМА ЗАГРУЖЕНА</div>
-            </div>
-
-        </div>
-
-        <div class="footer">═══════════ GITHUB ACTIONS ═══════════</div>
-
     </div>
 
     <script>
-        const GITHUB_USER = 'otklix';
-        const REPO_NAME = 'dj';
+        // === СПИСОК ПРИЛОЖЕНИЙ ДЛЯ HACK STORE ===
+        const hackApps = [
+            { id: 'app1', name: 'iExplorer Pro', desc: 'Файловый менеджер', version: '2.3.1' },
+            { id: 'app2', name: 'GameBoost+', desc: 'Ускоритель игр', version: '1.7.0' },
+            { id: 'app3', name: 'AdBlock Ultimate', desc: 'Блокировка рекламы', version: '4.2.5' },
+            { id: 'app4', name: 'Tweaks Manager', desc: 'Управление твиками', version: '3.0.1' },
+        ];
 
-        let isLoggedIn = false;
-        let currentLogin = '';
-        let currentPassword = '';
+        let installedApps = JSON.parse(localStorage.getItem('installedApps') || '[]');
 
-        function toggleLogin() {
-            const panel = document.getElementById('loginPanel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function loginLocal() {
-            const login = document.getElementById('botLogin').value.trim();
-            const password = document.getElementById('botPassword').value.trim();
-
-            if (!login || !password) {
-                addLog('error', '❌ ВВЕДИТЕ ЛОГИН И ПАРОЛЬ!');
-                return;
-            }
-
-            currentLogin = login;
-            currentPassword = password;
-            isLoggedIn = true;
-
-            document.getElementById('loginPanel').style.display = 'none';
-            document.getElementById('controlPanel').style.display = 'block';
-            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● ВОШЁЛ</span>';
-            addLog('success', `✅ ВХОД: ${login}`);
-        }
-
-        async function executeBot() {
-            if (!isLoggedIn) {
-                addLog('error', '❌ СНАЧАЛА ВОЙДИТЕ!');
-                return;
-            }
-
-            const link = document.getElementById('gameLink').value.trim();
-            const target = document.getElementById('targetNick').value.trim();
-            const action = document.getElementById('botAction').value;
-            const duration = document.getElementById('duration')?.value || 60;
-
-            if (!link.includes('roblox.com')) {
-                addLog('error', '❌ ВВЕДИТЕ ССЫЛКУ НА ROXBLOX!');
-                return;
-            }
-            if (!target) {
-                addLog('error', '❌ ВВЕДИТЕ НИК ЦЕЛИ!');
-                return;
-            }
-
-            addLog('info', `🎯 ОТПРАВЛЯЮ КОМАНДУ "${action}"`);
-            setStatus('ОТПРАВКА...', 'loading');
-
-            try {
-                const payload = {
-                    ref: 'main',
-                    inputs: {
-                        game_link: link,
-                        action: action,
-                        duration: String(duration),
-                        target_nick: target,
-                        login_method: 'password',
-                        login: currentLogin,
-                        password: currentPassword,
-                        roblosecurity: ''
-                    }
-                };
-
-                const response = await fetch(
-                    `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/actions/workflows/roblox-bot.yml/dispatches`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/vnd.github.v3+json',
-                            'User-Agent': 'RobloxBot/1.0'
-                        },
-                        body: JSON.stringify(payload)
-                    }
-                );
-
-                if (response.status === 204) {
-                    addLog('success', `✅ БОТ ЗАПУЩЕН! ДЕЙСТВИЕ: ${action}`);
-                    setStatus('БОТ ЗАПУЩЕН ✅', 'online');
-                } else {
-                    const errorText = await response.text();
-                    addLog('error', `❌ ОШИБКА ${response.status}: ${errorText}`);
-                    setStatus('ОШИБКА ❌', 'error');
+        // === ОТКРЫТИЕ/ЗАКРЫТИЕ ПРИЛОЖЕНИЙ ===
+        function openApp(appId) {
+            document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(appId);
+            if (target) {
+                target.classList.add('active');
+                if (appId === 'terminal') {
+                    document.getElementById('termInput').focus();
                 }
-            } catch (error) {
-                addLog('error', `❌ ОШИБКА: ${error.message}`);
-                setStatus('ОШИБКА ❌', 'error');
+                if (appId === 'hackStore') {
+                    renderHackStore();
+                }
             }
         }
 
-        function stopBot() {
-            addLog('info', '⛔ ОСТАНАВЛИВАЮ...');
-            setStatus('ОСТАНОВКА ⏹', 'online');
+        function closeApp(appId) {
+            document.getElementById(appId).classList.remove('active');
         }
 
-        function endSession() {
-            isLoggedIn = false;
-            currentLogin = '';
-            currentPassword = '';
-            document.getElementById('controlPanel').style.display = 'none';
-            document.getElementById('status').innerHTML = 'СТАТУС: <span class="online">● ОЖИДАНИЕ</span>';
-            addLog('success', '🔚 СЕССИЯ ЗАВЕРШЕНА.');
-        }
-
-        function setStatus(text, type) {
-            document.getElementById('status').innerHTML = `СТАТУС: <span class="${type}">● ${text}</span>`;
-        }
-
-        function addLog(type, message) {
-            const log = document.getElementById('logContainer');
-            const time = new Date().toLocaleTimeString();
-            const entry = document.createElement('div');
-            entry.className = `log-entry ${type}`;
-            entry.innerHTML = `<span class="time">[${time}]</span> ${message}`;
-            log.prepend(entry);
-            while (log.children.length > 30) log.removeChild(log.lastChild);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            addLog('system', '▸ СИСТЕМА ЗАГРУЖЕНА.');
-            addLog('info', `📌 ${GITHUB_USER}/${REPO_NAME}`);
+        document.querySelectorAll('.app-icon[data-app]').forEach(el => {
+            el.addEventListener('click', () => {
+                const appId = el.dataset.app;
+                if (appId === 'settings') {
+                    // Настройки просто открываем
+                    openApp('settings');
+                    return;
+                }
+                openApp(appId);
+            });
         });
+
+        // === БРАУЗЕР ===
+        function loadUrl() {
+            let url = document.getElementById('urlInput').value.trim();
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            document.getElementById('browserFrame').src = url;
+        }
+        document.getElementById('urlInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') loadUrl();
+        });
+
+        // === ТЕРМИНАЛ ===
+        const termOutput = document.getElementById('termOutput');
+        const termInput = document.getElementById('termInput');
+
+        function runCommand() {
+            const cmd = termInput.value.trim();
+            if (!cmd) return;
+            termOutput.textContent += `\n$ ${cmd}`;
+            const result = executeCommand(cmd);
+            termOutput.textContent += `\n${result}`;
+            termInput.value = '';
+            termOutput.scrollTop = termOutput.scrollHeight;
+        }
+
+        function executeCommand(cmd) {
+            const parts = cmd.split(' ');
+            const command = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            switch (command) {
+                case 'ls':
+                    return 'Documents  Downloads  Music  Photos  Apps';
+                case 'echo':
+                    return args.join(' ') || '';
+                case 'date':
+                    return new Date().toString();
+                case 'whoami':
+                    return 'mobile';
+                case 'pwd':
+                    return '/var/mobile';
+                case 'clear':
+                    termOutput.textContent = '$ Терминал очищен';
+                    return '';
+                case 'help':
+                    return 'Доступные команды: ls, echo, date, whoami, pwd, clear, help, uname';
+                case 'uname':
+                    return 'iOS 15.4 Darwin 21.0.0';
+                default:
+                    return `Команда не найдена: ${command}. Введите help`;
+            }
+        }
+
+        termInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') runCommand();
+        });
+
+        // === HACK STORE ===
+        function renderHackStore() {
+            const list = document.getElementById('hackList');
+            list.innerHTML = '';
+            hackApps.forEach(app => {
+                const installed = installedApps.includes(app.id);
+                const item = document.createElement('div');
+                item.className = 'hack-item';
+                item.innerHTML = `
+                    <div class="info">
+                        <span class="name">${app.name}</span>
+                        <span class="desc">${app.desc} • v${app.version}</span>
+                    </div>
+                    <button class="install-btn ${installed ? 'installed' : ''}" data-id="${app.id}">
+                        ${installed ? '✅ Установлено' : '📥 Установить'}
+                    </button>
+                `;
+                list.appendChild(item);
+
+                const btn = item.querySelector('.install-btn');
+                btn.addEventListener('click', () => {
+                    if (installedApps.includes(app.id)) {
+                        showToast(`⚠️ ${app.name} уже установлено`);
+                        return;
+                    }
+                    // Имитация установки IPA
+                    showToast(`⏳ Установка ${app.name}...`);
+                    setTimeout(() => {
+                        installedApps.push(app.id);
+                        localStorage.setItem('installedApps', JSON.stringify(installedApps));
+                        renderHackStore();
+                        showToast(`✅ ${app.name} успешно установлено!`);
+                    }, 1200);
+                });
+            });
+        }
+
+        // === TOAST ===
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            toast.textContent = text;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2200);
+        }
+
+        // === ИНИЦИАЛИЗАЦИЯ ===
+        renderHackStore();
+
+        // Свайп вниз для закрытия приложений (на касание)
+        let startY = 0;
+        document.getElementById('screen').addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+        document.getElementById('screen').addEventListener('touchmove', (e) => {
+            const deltaY = e.touches[0].clientY - startY;
+            if (deltaY > 80) {
+                const active = document.querySelector('.app-screen.active');
+                if (active) {
+                    active.classList.remove('active');
+                }
+                startY = 0;
+            }
+        });
+
+        console.log('✅ iOS Simulator с Hack Store запущен!');
+        console.log('📦 Установленные приложения:', installedApps);
     </script>
 
 </body>
