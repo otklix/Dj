@@ -14,50 +14,80 @@
         </div>
         
         <div class="screen" id="screen">
-            <!-- Status Bar -->
+            <!-- ========== СТАТУС БАР ========== -->
             <div class="status-bar">
                 <div class="time" id="clock">09:41</div>
                 <div class="indicators">
                     <span class="signal">📶</span>
                     <span class="wifi">⚡</span>
-                    <span class="battery">100% 🔋</span>
+                    <span class="battery" id="battery">100% 🔋</span>
                 </div>
             </div>
 
-            <!-- Main UI -->
-            <div id="springboard" class="active-layer">
+            <!-- ========== ЭКРАН БЛОКИРОВКИ ========== -->
+            <div id="lock-screen">
+                <div class="lock-top">
+                    <div class="lock-time" id="lock-time">00:00</div>
+                    <div class="lock-date" id="lock-date">Понедельник, 1 января</div>
+                </div>
+                <div class="lock-bottom">
+                    <div class="lock-hint">Смахивайте вверх для разблокировки</div>
+                    <div class="lock-icon">⬆</div>
+                    <div class="lock-tools">
+                        <span class="lock-tool">🔦</span>
+                        <span class="lock-tool">📷</span>
+                    </div>
+                </div>
+                <div class="home-indicator" onclick="unlockPhone()"></div>
+            </div>
+
+            <!-- ========== РАБОЧИЙ СТОЛ (SpringBoard) ========== -->
+            <div id="springboard">
+                <!-- Виджет погоды -->
+                <div class="weather-widget">
+                    <div>
+                        <div class="weather-temp">20°</div>
+                        <div class="weather-desc">В основном облачно</div>
+                    </div>
+                    <div class="weather-range">↓ 8° ↑ 20°</div>
+                </div>
+
+                <!-- Сетка приложений -->
                 <div class="app-grid" id="app-grid"></div>
+
+                <!-- Док -->
                 <div class="dock-container">
                     <div class="dock" id="dock"></div>
                 </div>
             </div>
 
-            <!-- App Layer -->
+            <!-- ========== ОКНО ПРИЛОЖЕНИЯ (С ФОНОМ) ========== -->
             <div id="app-window" class="hidden">
                 <div class="app-header">
-                    <button onclick="closeApp()">✕</button>
+                    <button class="back-btn" onclick="closeApp()">‹</button>
                     <span id="app-title">App</span>
                 </div>
                 <div id="app-content"></div>
             </div>
 
-            <!-- Home Indicator -->
-            <div class="home-indicator" onclick="closeApp()"></div>
+            <!-- ========== HOME INDICATOR ========== -->
+            <div class="home-indicator-bottom" onclick="goHome()"></div>
         </div>
         
+        <!-- ========== TOAST ========== -->
         <div id="toast" class="toast hidden"></div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/filesystem.js"></script>
+    <!-- ========== СКРИПТЫ ========== -->
+    <script src="js/app.js"></script>
     <script src="js/springboard.js"></script>
     <script src="js/settings.js"></script>
-    <script src="js/wallpapers.js"></script>
     <script src="js/appstore.js"></script>
     <script src="js/terminal.js"></script>
     <script src="js/shortcuts.js"></script>
     <script src="js/camera.js"></script>
     <script src="js/fieldtest.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/wallpapers.js"></script>
+    <script src="js/filesystem.js"></script>
 </body>
 </html>
